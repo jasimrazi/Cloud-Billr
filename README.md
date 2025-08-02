@@ -24,23 +24,3 @@
 - 🔍 **Smart Search & History**  
   View and filter previous invoices with ease.
 
----
-
-## 🛠️ Tech Stack
-
-- **Frontend:** Flutter
-- **PDF Generation:** `pdf` package
-- **Local Storage:** Hive / SQLite
-- **Cloud Backup:** Firebase / Supabase
-- **State Management:** Provider / Riverpod
-
----
-
-## 📸 Screenshots (Coming Soon)
-
-_Add preview images of your invoice templates and UI here._
-
----
-
-## 📂 Project Structure (Example)
-
