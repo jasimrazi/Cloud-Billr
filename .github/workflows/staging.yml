@@ -41,6 +41,12 @@ jobs:
       - name: Build APK for Staging
         run: flutter build apk --flavor staging -t lib/main.dart
 
+      # NEW STEP: Rename APK to include version
+      - name: Rename APK with version
+        run: |
+          mv build/app/outputs/flutter-apk/app-staging-release.apk \
+             build/app/outputs/flutter-apk/cloud-billr-staging-v${{ steps.version.outputs.version }}.apk
+
       - name: Create Release and Upload APK
         uses: softprops/action-gh-release@v1
         with:
@@ -54,6 +60,6 @@ jobs:
             **Commit:** ${{ github.sha }}
           draft: false
           prerelease: true
-          files: build/app/outputs/flutter-apk/app-staging-release.apk
+          files: build/app/outputs/flutter-apk/cloud-billr-staging-v${{ steps.version.outputs.version }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
