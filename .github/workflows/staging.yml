@@ -41,7 +41,7 @@ jobs:
         run: flutter pub get
 
       - name: Build APK for Staging
-        run: flutter build apk --flavor staging -t lib/main_staging.dart
+        run: flutter build apk --flavor staging -t lib/main.dart
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
