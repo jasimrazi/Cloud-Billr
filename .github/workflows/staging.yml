@@ -9,12 +9,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Test connection to Flutter releases
-        run: curl "https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json"
 
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -29,12 +29,6 @@ jobs:
           channel: 'stable'
           architecture: x64
 
-      - name: Fix Flutter SDK folder permission (safe.directory)
-        run: git config --global --add safe.directory /opt/hostedtoolcache/flutter/3.32.8-stable-x64
-
-      - name: Flutter Doctor (debugging)
-        run: flutter doctor -v
-
       - name: Install dependencies
         run: flutter pub get
 
@@ -43,25 +37,15 @@ jobs:
         run: |
           VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //' | tr -d ' ')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Version: $VERSION"
 
       - name: Build APK for Staging
         run: flutter build apk --flavor staging -t lib/main.dart
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: staging-apk-v${{ steps.version.outputs.version }}
-          path: build/app/outputs/flutter-apk/app-staging-release.apk
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release and Upload APK
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: staging-v${{ steps.version.outputs.version }}
-          release_name: Staging Release v${{ steps.version.outputs.version }}
+          name: Staging Release v${{ steps.version.outputs.version }}
           body: |
             Staging build from commit ${{ github.sha }}
             
@@ -70,13 +54,6 @@ jobs:
             **Commit:** ${{ github.sha }}
           draft: false
           prerelease: true
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
+          files: build/app/outputs/flutter-apk/app-staging-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/app/outputs/flutter-apk/app-staging-release.apk
-          asset_name: cloud-billr-staging-v${{ steps.version.outputs.version }}.apk
-          asset_content_type: application/vnd.android.package-archive
