@@ -2,9 +2,6 @@ import 'package:cloud_billr/controllers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-//Entry point
-//new entry point
-//next entry poiunt
 void main() {
   runApp(MultiProvider(
     providers: providers,
