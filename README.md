@@ -1,6 +1,7 @@
 # ☁️ Cloud-Billr
 
-**Cloud-Billr** is a modern, minimal, and scalable invoice generator designed for speed, simplicity, and customization. Create professional invoices using pre-designed templates, personalize them with your branding, add taxes and products, and store them locally — with daily cloud backup for peace of mind.
+**Cloud-Billr** is a modern, minimal, and scalable invoice generator designed for speed, simplicity, and customization.  
+Create professional invoices using pre-designed templates, personalize them with your branding, add taxes and products, and store them locally — with daily cloud backup for peace of mind.
 
 ---
 
@@ -24,3 +25,25 @@
 - 🔍 **Smart Search & History**  
   View and filter previous invoices with ease.
 
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+- Fork the repository and clone it to your local machine.
+- Create a new branch for your feature or bugfix.
+- Make your changes and commit with clear messages.
+- Push to your fork and submit a pull request describing your changes.
+
+For significant changes, please open an issue first to discuss your proposal.  
+Please follow the project's code of conduct and adhere to its style guidelines.
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.  
+See the [LICENSE](./LICENSE) file for full details.
+
+---
