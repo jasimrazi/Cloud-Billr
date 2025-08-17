@@ -40,10 +40,3 @@ For significant changes, please open an issue first to discuss your proposal.
 Please follow the project's code of conduct and adhere to its style guidelines.
 
 ---
-
-## 📜 License
-
-This project is licensed under the **MIT License**.  
-See the [LICENSE](./LICENSE) file for full details.
-
----
