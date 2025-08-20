@@ -1,4 +1,6 @@
 import 'package:cloud_billr/controllers/providers.dart';
+import 'package:cloud_billr/utils/theme.dart';
+import 'package:cloud_billr/views/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,11 +16,28 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColor: AppColors.primaryColorLight, // Light mode primary color
+        colorScheme: ColorScheme.light(
+          primary: AppColors.primaryColorLight,
+          secondary: AppColors.secondaryColorLight,
+        ),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: AppColors.primaryColorDark, // Dark mode primary color
+        colorScheme: ColorScheme.dark(
+          primary: AppColors.primaryColorDark,
+          secondary: AppColors.secondaryColorDark,
+        ),
+      ),
+      themeMode: ThemeMode.system,
       home: Scaffold(
         body: Center(
-          child: Text('Hello World!'),
+          child: HomeScreen(),
         ),
       ),
     );
