@@ -42,6 +42,8 @@ class AppColors{
   //border colors
   static const borderColorLight = Color(0xFFF3F4F6);
   static const borderColorDark = Color(0xFF374151);
+
+  static const shadowColorLight = Color(0x0D000000);
 }
 
 class AppSpacing {
@@ -49,6 +51,7 @@ class AppSpacing {
   static const double paddingSmall = 8.0;
   static const double paddingMedium = 16.0;
   static const double paddingLarge = 24.0;
+  static const double mainPadding = 20;
 
   // Margin
   static const double marginSmall = 8.0;
