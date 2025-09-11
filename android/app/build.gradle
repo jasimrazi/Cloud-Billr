@@ -39,6 +39,10 @@ android {
             applicationIdSuffix ".staging" // Optional: differentiates package name for staging
             versionNameSuffix "-staging"   // Optional: version name suffix for staging builds
         }
+        production {
+            dimension "default"
+            // no suffix → treated as the default app
+        }
 
         // You can add more flavors, for example:
         // production {
