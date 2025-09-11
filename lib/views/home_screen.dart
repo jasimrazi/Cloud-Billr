@@ -2,6 +2,7 @@
 import 'package:cloud_billr/models/invoice_model.dart';
 import 'package:cloud_billr/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,188 +24,206 @@ class _HomeScreenState extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.paddingMedium),
       child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            surfaceTintColor: Colors.transparent,
-            leading: CircleAvatar(
-              backgroundColor: AppColors.secondaryColorLight,
-              child: Icon(Icons.person, color: AppColors.lightTextColor,),
-            ),
-            title: Text('Invoices'),
-            actions: [
-              IconButton(onPressed: (){}, icon: Icon(Icons.notifications_none))
-            ],
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: AppSpacing.spacingXL,),
-              Container(
-                decoration: BoxDecoration(
-                  border: BoxBorder.fromLTRB(
-                    bottom: BorderSide(color: AppColors.borderColorLight, width: 2),
-                    right: BorderSide(color: AppColors.borderColorLight, width: 1),
-                    left: BorderSide(color: AppColors.borderColorLight, width: 1),
-                  ),
-                  borderRadius: AppRadius.medium,
-                ),
-                padding: EdgeInsets.symmetric(horizontal: AppSpacing.paddingSmall, vertical: AppSpacing.paddingMedium),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildIconWidget(
-                      icon: Icon(Icons.add), 
-                      label: 'New Invoice',
-                      color: AppColors.primaryColorLight
-                    ),
-                    _buildIconWidget(
-                      icon: Icon(Icons.description_outlined), 
-                      label: 'View All',
-                      color: AppColors.successGreenLight
-                    ),
-                    _buildIconWidget(
-                      icon: Icon(Icons.grid_view_outlined), 
-                      label: 'Templates',
-                      color: AppColors.violetLight
-                    )
-                  ],
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Scaffold(
+            appBar: AppBar(
+              toolbarHeight: 60,
+              surfaceTintColor: Colors.transparent,
+              leading: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: CircleAvatar(
+                  backgroundColor: AppColors.secondaryColorLight,
+                  child: Icon(Icons.person, color: AppColors.lightTextColor,),
                 ),
               ),
-
-              SizedBox(height: AppSpacing.spacingM,),
-              Container(
-                padding: EdgeInsets.fromLTRB(AppSpacing.paddingSmall, AppSpacing.paddingMedium, AppSpacing.paddingSmall, AppSpacing.paddingLarge),
-                decoration: BoxDecoration(
-                  color: AppColors.secondaryColorLight,
-                  borderRadius: AppRadius.medium,
+              title: Text('Invoices'),
+              actions: [
+                // IconButton(onPressed: (){}, icon: Icon(Icons.notifications_none))
+                SvgPicture.asset(
+                  'assets/icons/notification.svg',
+                  width: 48,
+                  height: 48,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.blue, // Optional: change SVG color
+                    BlendMode.srcIn,
+                  ),
                 ),
-                child: Row(
-                  children: [
-                    Icon(Icons.cloud_done_outlined, color: AppColors.successGreenLight),
-                    SizedBox(width: 20,),
-                    Text('Last backup: Today at 6:00 PM', style: TextStyle(
-                      color: AppColors.lightTextSecondaryColor
-                    ),),
-                    Spacer(),
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: AppColors.successGreenLight,
-                        borderRadius: BorderRadius.circular(5),
+              ],
+            ),
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: AppSpacing.spacingXL,),
+                Container(
+                  decoration: BoxDecoration(
+                    border: BoxBorder.fromLTRB(
+                      bottom: BorderSide(color: AppColors.borderColorLight, width: 2),
+                      right: BorderSide(color: AppColors.borderColorLight, width: 1),
+                      left: BorderSide(color: AppColors.borderColorLight, width: 1),
+                    ),
+                    borderRadius: AppRadius.medium,
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.paddingSmall, vertical: AppSpacing.paddingMedium),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildIconWidget(
+                        icon: Icon(Icons.add), 
+                        label: 'New Invoice',
+                        color: AppColors.primaryColorLight
+                      ),
+                      _buildIconWidget(
+                        icon: Icon(Icons.description_outlined), 
+                        label: 'View All',
+                        color: AppColors.successGreenLight
+                      ),
+                      _buildIconWidget(
+                        icon: Icon(Icons.grid_view_outlined), 
+                        label: 'Templates',
+                        color: AppColors.violetLight
+                      )
+                    ],
+                  ),
+                ),
+          
+                SizedBox(height: AppSpacing.spacingM,),
+                Container(
+                  padding: EdgeInsets.fromLTRB(AppSpacing.paddingSmall, AppSpacing.paddingMedium, AppSpacing.paddingSmall, AppSpacing.paddingLarge),
+                  decoration: BoxDecoration(
+                    color: AppColors.secondaryColorLight,
+                    borderRadius: AppRadius.medium,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.cloud_done_outlined, color: AppColors.successGreenLight),
+                      SizedBox(width: 20,),
+                      Expanded(
+                        child: Text('Last backup: Today at 6:00 PM', style: TextStyle(
+                          color: AppColors.lightTextSecondaryColor
+                        ),),
+                      ),
+                      // Spacer(),
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: AppColors.successGreenLight,
+                          shape: BoxShape.circle
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: AppSpacing.spacingM,),
+                Text('Recent Invoices', style: TextStyle(
+                  color: AppColors.lightTextColor,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16,
+                ),),SizedBox(height: AppSpacing.spacingM,),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: invoices.length,
+                    itemBuilder: (context, index) {
+                      return _buildInvoiceCard(
+                        invoiceNumber: invoices[index].invoiceNumber, 
+                        clientName: invoices[index].clientName, 
+                        amount: invoices[index].amount, 
+                        status: invoices[index].status, 
+                        date: invoices[index].date
+                      );
+                    },
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(AppSpacing.paddingMedium),
+                  margin: EdgeInsets.all(AppSpacing.marginSmall),
+                  decoration: BoxDecoration(
+                    borderRadius: AppRadius.medium,
+                    border: BoxBorder.fromLTRB(
+                      bottom: BorderSide(
+                        color: AppColors.borderColorLight,
+                        width: 2
+                      ),
+                      left: BorderSide(
+                        color: AppColors.borderColorLight,
+                        width: 1
+                      ),
+                      right: BorderSide(
+                        color: AppColors.borderColorLight,
+                        width: 1
+                      )
+                    )
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('This Month\'s Revenue', style: TextStyle(
+                            color: AppColors.lightTextSecondaryColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14
+                          ),),
+                            
+                          Text('\$12,500.00',style: TextStyle(
+                            color: AppColors.lightTextColor,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20
+                          ),),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Pending Invoices', style: TextStyle(
+                            color: AppColors.lightTextSecondaryColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14
+                          ),),
+                            
+                          Text('\$3,200.00',style: TextStyle(
+                            color: AppColors.lightTextColor,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20
+                          ),),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: AppSpacing.spacingM,),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: AppRadius.medium,
+                    border: BoxBorder.fromLTRB(
+                      top: BorderSide(
+                        color: AppColors.borderColorLight,
+                        width: 2
                       ),
                     )
-                  ],
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.settings, color: AppColors.lightTextSecondaryColor,),
+                      SizedBox(width: AppSpacing.spacingS,),
+                      Text('Settings', style: TextStyle(
+                        color: AppColors.lightTextColor,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16
+                      ),),
+                      Spacer(),
+                      IconButton(
+                        onPressed: (){}, 
+                        icon: Icon(Icons.keyboard_arrow_right, color: AppColors.lightTextSecondaryColor,))
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: AppSpacing.spacingM,),
-              Text('Recent Invoices', style: TextStyle(
-                color: AppColors.lightTextColor,
-                fontWeight: FontWeight.w400,
-                fontSize: 16,
-              ),),SizedBox(height: AppSpacing.spacingM,),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: invoices.length,
-                  itemBuilder: (context, index) {
-                    return _buildInvoiceCard(
-                      invoiceNumber: invoices[index].invoiceNumber, 
-                      clientName: invoices[index].clientName, 
-                      amount: invoices[index].amount, 
-                      status: invoices[index].status, 
-                      date: invoices[index].date
-                    );
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.all(AppSpacing.paddingMedium),
-                margin: EdgeInsets.all(AppSpacing.marginSmall),
-                decoration: BoxDecoration(
-                  borderRadius: AppRadius.medium,
-                  border: BoxBorder.fromLTRB(
-                    bottom: BorderSide(
-                      color: AppColors.borderColorLight,
-                      width: 2
-                    ),
-                    left: BorderSide(
-                      color: AppColors.borderColorLight,
-                      width: 1
-                    ),
-                    right: BorderSide(
-                      color: AppColors.borderColorLight,
-                      width: 1
-                    )
-                  )
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('This Month\'s Revenue', style: TextStyle(
-                          color: AppColors.lightTextSecondaryColor,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14
-                        ),),
-                          
-                        Text('\$12,500.00',style: TextStyle(
-                          color: AppColors.lightTextColor,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 20
-                        ),),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Pending Invoices', style: TextStyle(
-                          color: AppColors.lightTextSecondaryColor,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14
-                        ),),
-                          
-                        Text('\$3,200.00',style: TextStyle(
-                          color: AppColors.lightTextColor,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 20
-                        ),),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: AppSpacing.spacingM,),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: AppRadius.medium,
-                  border: BoxBorder.fromLTRB(
-                    top: BorderSide(
-                      color: AppColors.borderColorLight,
-                      width: 2
-                    ),
-                  )
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.settings, color: AppColors.lightTextSecondaryColor,),
-                    SizedBox(width: AppSpacing.spacingS,),
-                    Text('Settings', style: TextStyle(
-                      color: AppColors.lightTextColor,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16
-                    ),),
-                    Spacer(),
-                    IconButton(
-                      onPressed: (){}, 
-                      icon: Icon(Icons.keyboard_arrow_right, color: AppColors.lightTextSecondaryColor,))
-                  ],
-                ),
-              ),
-              SizedBox(height: AppSpacing.spacingM,),
-
-            ],
+                SizedBox(height: AppSpacing.spacingM,),
+          
+              ],
+            ),
           ),
         ),
       ),
