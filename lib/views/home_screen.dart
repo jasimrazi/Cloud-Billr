@@ -22,46 +22,51 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+      padding: const EdgeInsets.all(AppSpacing.mainPadding),
       child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Scaffold(
-            appBar: AppBar(
-              toolbarHeight: 60,
-              surfaceTintColor: Colors.transparent,
-              leading: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: CircleAvatar(
-                  backgroundColor: AppColors.secondaryColorLight,
-                  child: Icon(Icons.person, color: AppColors.lightTextColor,),
+        child: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 60,
+            surfaceTintColor: Colors.transparent,
+            leading: CircleAvatar(
+              backgroundColor: AppColors.secondaryColorLight,
+              child: Icon(Icons.person, color: AppColors.lightTextColor,),
+            ),
+            title: Text('Invoices'),
+            actions: [
+              // IconButton(onPressed: (){}, icon: Icon(Icons.notifications_none))
+              SvgPicture.asset(
+                'assets/icons/notification.svg',
+                width: 24,
+                height: 24,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.lightTextColor, // Optional: change SVG color
+                  BlendMode.srcIn,
                 ),
               ),
-              title: Text('Invoices'),
-              actions: [
-                // IconButton(onPressed: (){}, icon: Icon(Icons.notifications_none))
-                SvgPicture.asset(
-                  'assets/icons/notification.svg',
-                  width: 48,
-                  height: 48,
-                  colorFilter: const ColorFilter.mode(
-                    Colors.blue, // Optional: change SVG color
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ],
-            ),
-            body: Column(
+            ],
+          ),
+          body: SingleChildScrollView(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: AppSpacing.spacingXL,),
+                SizedBox(height: AppSpacing.spacingL,),
                 Container(
                   decoration: BoxDecoration(
-                    border: BoxBorder.fromLTRB(
-                      bottom: BorderSide(color: AppColors.borderColorLight, width: 2),
-                      right: BorderSide(color: AppColors.borderColorLight, width: 1),
-                      left: BorderSide(color: AppColors.borderColorLight, width: 1),
-                    ),
+                    // border: BoxBorder.fromLTRB(
+                    //   bottom: BorderSide(color: AppColors.borderColorLight, width: 2),
+                    //   right: BorderSide(color: AppColors.borderColorLight, width: 1),
+                    //   left: BorderSide(color: AppColors.borderColorLight, width: 1),
+                    // ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.shadowColorLight,
+                        offset: Offset(0, 1),
+                        blurRadius: 2,
+                        blurStyle: BlurStyle.outer
+                    
+                      )
+                    ],
                     borderRadius: AppRadius.medium,
                   ),
                   padding: EdgeInsets.symmetric(horizontal: AppSpacing.paddingSmall, vertical: AppSpacing.paddingMedium),
@@ -86,10 +91,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-          
-                SizedBox(height: AppSpacing.spacingM,),
+                    
+                SizedBox(height: AppSpacing.spacingL,),
                 Container(
-                  padding: EdgeInsets.fromLTRB(AppSpacing.paddingSmall, AppSpacing.paddingMedium, AppSpacing.paddingSmall, AppSpacing.paddingLarge),
+                  padding: EdgeInsets.all(AppSpacing.paddingMedium),
                   decoration: BoxDecoration(
                     color: AppColors.secondaryColorLight,
                     borderRadius: AppRadius.medium,
@@ -103,7 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: AppColors.lightTextSecondaryColor
                         ),),
                       ),
-                      // Spacer(),
                       Container(
                         width: 8,
                         height: 8,
@@ -115,45 +119,40 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: AppSpacing.spacingM,),
+                SizedBox(height: AppSpacing.spacingL,),
                 Text('Recent Invoices', style: TextStyle(
                   color: AppColors.lightTextColor,
                   fontWeight: FontWeight.w400,
                   fontSize: 16,
-                ),),SizedBox(height: AppSpacing.spacingM,),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: invoices.length,
-                    itemBuilder: (context, index) {
-                      return _buildInvoiceCard(
-                        invoiceNumber: invoices[index].invoiceNumber, 
-                        clientName: invoices[index].clientName, 
-                        amount: invoices[index].amount, 
-                        status: invoices[index].status, 
-                        date: invoices[index].date
-                      );
-                    },
-                  ),
+                ),),
+                SizedBox(height: AppSpacing.spacingM,),
+                ListView.builder(
+                  itemCount: invoices.length,
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return _buildInvoiceCard(
+                      invoiceNumber: invoices[index].invoiceNumber, 
+                      clientName: invoices[index].clientName, 
+                      amount: invoices[index].amount, 
+                      status: invoices[index].status, 
+                      date: invoices[index].date
+                    );
+                  },
                 ),
+                SizedBox(height: AppSpacing.spacingS,),
                 Container(
                   padding: EdgeInsets.all(AppSpacing.paddingMedium),
-                  margin: EdgeInsets.all(AppSpacing.marginSmall),
                   decoration: BoxDecoration(
                     borderRadius: AppRadius.medium,
-                    border: BoxBorder.fromLTRB(
-                      bottom: BorderSide(
-                        color: AppColors.borderColorLight,
-                        width: 2
-                      ),
-                      left: BorderSide(
-                        color: AppColors.borderColorLight,
-                        width: 1
-                      ),
-                      right: BorderSide(
-                        color: AppColors.borderColorLight,
-                        width: 1
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 1),
+                        blurRadius: 2,
+                        color: AppColors.shadowColorLight,
+                        blurStyle: BlurStyle.outer
                       )
-                    )
+                    ]
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -193,35 +192,34 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: AppSpacing.spacingM,),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: AppRadius.medium,
-                    border: BoxBorder.fromLTRB(
-                      top: BorderSide(
-                        color: AppColors.borderColorLight,
-                        width: 2
-                      ),
-                    )
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.settings, color: AppColors.lightTextSecondaryColor,),
-                      SizedBox(width: AppSpacing.spacingS,),
-                      Text('Settings', style: TextStyle(
+                SizedBox(height: AppSpacing.spacingL,),
+                Divider(
+                  color: AppColors.borderColorLight,
+                  thickness: 2,
+                ),
+                Row(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/settings.svg',
+                      colorFilter: ColorFilter.mode(AppColors.lightTextSecondaryColor, BlendMode.srcIn),
+                      width: 24,
+                      height: 24,
+                    ),
+                    SizedBox(width: AppSpacing.spacingS,),
+                    Expanded(
+                      child: Text('Settings', style: TextStyle(
                         color: AppColors.lightTextColor,
                         fontWeight: FontWeight.w400,
                         fontSize: 16
                       ),),
-                      Spacer(),
-                      IconButton(
-                        onPressed: (){}, 
-                        icon: Icon(Icons.keyboard_arrow_right, color: AppColors.lightTextSecondaryColor,))
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                      onPressed: (){}, 
+                      icon: Icon(Icons.keyboard_arrow_right, color: AppColors.lightTextSecondaryColor,))
+                  ],
                 ),
                 SizedBox(height: AppSpacing.spacingM,),
-          
+                    
               ],
             ),
           ),
@@ -257,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }) {
     return Container(
       padding: EdgeInsets.all(AppSpacing.paddingMedium),
-      margin: EdgeInsets.all(AppSpacing.marginSmall),
+      margin: EdgeInsets.only(bottom: AppSpacing.marginMedium),
       decoration: BoxDecoration(
         borderRadius: AppRadius.medium,
         border: Border.all(color: AppColors.borderColorLight)
@@ -268,34 +266,36 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Row(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(invoiceNumber, style: TextStyle(
-                    color: AppColors.lightTextColor,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14
-                  ),),
-
-                  Text(clientName,style: TextStyle(
-                    color: AppColors.lightTextSecondaryColor,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14
-                  ),),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(invoiceNumber, style: TextStyle(
+                      color: AppColors.lightTextColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14
+                    ),),
+                
+                    Text(clientName,style: TextStyle(
+                      color: AppColors.lightTextSecondaryColor,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14
+                    ),),
+                  ],
+                ),
               ),
-              Spacer(),
               _buildStatusContainer(status: status)
             ],
           ),
           Row(
             children: [
-              Text(amount, style: TextStyle(
-                color: AppColors.lightTextColor,
-                fontSize: 14,
-                fontWeight: FontWeight.w500
-              ),),
-              Spacer(),
+              Expanded(
+                child: Text(amount, style: TextStyle(
+                  color: AppColors.lightTextColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500
+                ),),
+              ),
               Text(date, style: TextStyle(
                 color: AppColors.lightTextSecondaryColor,
                 fontWeight: FontWeight.w400,
