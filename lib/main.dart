@@ -1,8 +1,10 @@
 import 'package:cloud_billr/controllers/providers.dart';
-import 'package:cloud_billr/utils/theme.dart';
-import 'package:cloud_billr/views/home_screen.dart';
+import 'package:cloud_billr/utils/color_scheme.dart';
+import 'package:cloud_billr/views/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+late AppColorScheme appColors; // global instance
 
 void main() {
   runApp(MultiProvider(
@@ -20,21 +22,27 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.light,
-        primaryColor: AppColors.primaryColorLight, // Light mode primary color
-        colorScheme: ColorScheme.light(
-          primary: AppColors.primaryColorLight,
-          secondary: AppColors.secondaryColorLight,
-        ),
+        // scaffoldBackgroundColor: AppColorScheme.light.backgroundColor,
+        // appBarTheme: AppBarTheme(
+        //   backgroundColor: AppColorScheme.light.secondaryColor,
+        //   foregroundColor: AppColorScheme.light.textColor,
+        // ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        primaryColor: AppColors.primaryColorDark, // Dark mode primary color
-        colorScheme: ColorScheme.dark(
-          primary: AppColors.primaryColorDark,
-          secondary: AppColors.secondaryColorDark,
-        ),
+        // scaffoldBackgroundColor: AppColorScheme.dark.backgroundColor,
+        // appBarTheme: AppBarTheme(
+        //   backgroundColor: AppColorScheme.dark.secondaryColor,
+        //   foregroundColor: AppColorScheme.dark.textColor,
+        // ),
       ),
+      builder: (context, child) {
+        final brightness = MediaQuery.of(context).platformBrightness;
+        appColors = brightness == Brightness.dark? AppColorScheme.dark : AppColorScheme.light;
+        return child!;
+      },
       themeMode: ThemeMode.system,
+      
       home: Scaffold(
         body: Center(
           child: HomeScreen(),
