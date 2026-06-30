@@ -107,11 +107,11 @@ class _PastInvoicesScreenState extends State<PastInvoicesScreen> {
                   decoration: InputDecoration(
                     hintText: 'Search invoices...',
                     hintStyle: TextStyle(
-                      color: appColors.textSecondaryColor.withOpacity(0.5),
+                      color: appColors.textSecondaryColor.withValues(alpha: 0.5),
                     ),
                     prefixIcon: Icon(
                       Icons.search,
-                      color: appColors.textSecondaryColor.withOpacity(0.6),
+                      color: appColors.textSecondaryColor.withValues(alpha: 0.6),
                     ),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(

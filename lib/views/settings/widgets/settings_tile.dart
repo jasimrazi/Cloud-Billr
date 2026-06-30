@@ -62,7 +62,7 @@ class SettingsTile extends StatelessWidget {
                 child: Text(
                   subtitle!,
                   style: TextStyle(
-                    color: appColors.textSecondaryColor.withOpacity(0.7),
+                    color: appColors.textSecondaryColor.withValues(alpha: 0.7),
                     fontSize: 12,
                   ),
                 ),

@@ -26,7 +26,7 @@ class LogoPicker extends StatelessWidget {
               Icon(
                 Icons.camera_alt_outlined,
                 size: 32,
-                color: appColors.textSecondaryColor.withOpacity(0.6),
+                color: appColors.textSecondaryColor.withValues(alpha: 0.6),
               ),
               const SizedBox(height: AppSpacing.spacingS),
               Text(

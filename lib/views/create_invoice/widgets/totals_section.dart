@@ -48,7 +48,7 @@ class TotalsSection extends StatelessWidget {
                   decoration: InputDecoration(
                     hintText: '0',
                     hintStyle: TextStyle(
-                      color: appColors.textSecondaryColor.withOpacity(0.5),
+                      color: appColors.textSecondaryColor.withValues(alpha: 0.5),
                     ),
                     contentPadding: EdgeInsets.zero,
                     border: InputBorder.none,

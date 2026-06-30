@@ -55,7 +55,7 @@ class PastInvoiceCard extends StatelessWidget {
                 Text(
                   date,
                   style: TextStyle(
-                    color: appColors.textSecondaryColor.withOpacity(0.7),
+                    color: appColors.textSecondaryColor.withValues(alpha: 0.7),
                     fontSize: 12,
                   ),
                 ),
@@ -78,7 +78,7 @@ class PastInvoiceCard extends StatelessWidget {
                 onTap: onPdfTap,
                 child: CircleAvatar(
                   radius: 18,
-                  backgroundColor: appColors.primaryBlueColor.withOpacity(0.5),
+                  backgroundColor: appColors.primaryBlueColor.withValues(alpha: 0.5),
                   child: Icon(
                     Icons.description_outlined,
                     size: 18,
