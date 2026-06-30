@@ -60,7 +60,7 @@ class _TemplatePickerState extends State<TemplatePicker> {
                             Icons.article_outlined,
                             color: isSelected
                                 ? appColors.primaryColor
-                                : appColors.textSecondaryColor.withOpacity(0.5),
+                                : appColors.textSecondaryColor.withValues(alpha: 0.5),
                           ),
                           const SizedBox(height: AppSpacing.spacingS),
                           Text(

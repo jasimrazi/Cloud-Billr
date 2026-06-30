@@ -29,7 +29,7 @@ class LabeledTextField extends StatelessWidget {
           Text(
             label!,
             style: TextStyle(
-              color: appColors.textColor.withOpacity(0.7),
+              color: appColors.textColor.withValues(alpha: 0.7),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -50,7 +50,7 @@ class LabeledTextField extends StatelessWidget {
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: TextStyle(
-                color: appColors.textSecondaryColor.withOpacity(0.5),
+                color: appColors.textSecondaryColor.withValues(alpha: 0.5),
                 fontSize: 14,
               ),
               contentPadding: const EdgeInsets.symmetric(

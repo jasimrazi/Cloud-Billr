@@ -42,7 +42,7 @@ class ItemCard extends StatelessWidget {
                   onPressed: onRemove,
                   icon: Icon(
                     Icons.delete_outline,
-                    color: appColors.textSecondaryColor.withOpacity(0.8),
+                    color: appColors.textSecondaryColor.withValues(alpha: 0.8),
                   ),
                   constraints: const BoxConstraints(),
                   padding: EdgeInsets.zero,

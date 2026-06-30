@@ -127,7 +127,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: 'Cloud Backup',
               trailing: Switch.adaptive(
                 value: _cloudBackupEnabled,
-                activeColor: appColors.primaryColor,
+                activeTrackColor: appColors.primaryColor.withValues(alpha: 0.5),
+                activeThumbColor: appColors.primaryColor,
                 onChanged: (value) {
                   setState(() {
                     _cloudBackupEnabled = value;
@@ -151,7 +152,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: 'Dark Mode',
               trailing: Switch.adaptive(
                 value: _darkModeEnabled,
-                activeColor: appColors.primaryColor,
+                activeTrackColor: appColors.primaryColor.withValues(alpha: 0.5),
+                activeThumbColor: appColors.primaryColor,
                 onChanged: (value) {
                   setState(() {
                     _darkModeEnabled = value;
@@ -165,7 +167,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: 'Notifications',
               trailing: Switch.adaptive(
                 value: _notificationsEnabled,
-                activeColor: appColors.primaryColor,
+                activeTrackColor: appColors.primaryColor.withValues(alpha: 0.5),
+                activeThumbColor: appColors.primaryColor,
                 onChanged: (value) {
                   setState(() {
                     _notificationsEnabled = value;
