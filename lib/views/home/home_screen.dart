@@ -2,8 +2,11 @@
 import 'package:cloud_billr/main.dart';
 import 'package:cloud_billr/models/invoice_model.dart';
 import 'package:cloud_billr/utils/theme.dart';
+import 'package:cloud_billr/views/create_invoice/create_invoice_screen.dart';
 import 'package:cloud_billr/views/home/widgets/icon_widget.dart';
 import 'package:cloud_billr/views/home/widgets/invoice_card.dart';
+import 'package:cloud_billr/views/past_invoices/past_invoices_screen.dart';
+import 'package:cloud_billr/views/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -76,18 +79,30 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      IconWidget(
-                        icon: Icon(Icons.add), 
-                        label: 'New Invoice',
-                        color: appColors.primaryColor
+                      GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const CreateInvoiceScreen()),
+                        ),
+                        child: IconWidget(
+                          icon: const Icon(Icons.add), 
+                          label: 'New Invoice',
+                          color: appColors.primaryColor
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const PastInvoicesScreen()),
+                        ),
+                        child: IconWidget(
+                          icon: const Icon(Icons.description_outlined), 
+                          label: 'View All',
+                          color: appColors.successGreenColor
+                        ),
                       ),
                       IconWidget(
-                        icon: Icon(Icons.description_outlined), 
-                        label: 'View All',
-                        color: appColors.successGreenColor
-                      ),
-                      IconWidget(
-                        icon: Icon(Icons.grid_view_outlined), 
+                        icon: const Icon(Icons.grid_view_outlined), 
                         label: 'Templates',
                         color: appColors.violetColor
                       )
@@ -196,26 +211,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: appColors.borderColor,
                   thickness: 2,
                 ),
-                Row(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/settings.svg',
-                      colorFilter: ColorFilter.mode(appColors.textSecondaryColor, BlendMode.srcIn),
-                      width: 24,
-                      height: 24,
+                InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/settings.svg',
+                          colorFilter: ColorFilter.mode(appColors.textSecondaryColor, BlendMode.srcIn),
+                          width: 24,
+                          height: 24,
+                        ),
+                        SizedBox(width: AppSpacing.spacingS,),
+                        Expanded(
+                          child: Text('Settings', style: TextStyle(
+                            color: appColors.textColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16
+                          ),),
+                        ),
+                        Icon(Icons.keyboard_arrow_right, color: appColors.textSecondaryColor)
+                      ],
                     ),
-                    SizedBox(width: AppSpacing.spacingS,),
-                    Expanded(
-                      child: Text('Settings', style: TextStyle(
-                        color: appColors.textColor,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16
-                      ),),
-                    ),
-                    IconButton(
-                      onPressed: (){}, 
-                      icon: Icon(Icons.keyboard_arrow_right, color: appColors.textSecondaryColor,))
-                  ],
+                  ),
                 ),
                 SizedBox(height: AppSpacing.spacingM,),
                     
