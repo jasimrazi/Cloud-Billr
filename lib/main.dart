@@ -2,6 +2,7 @@ import 'package:cloud_billr/controllers/providers.dart';
 import 'package:cloud_billr/utils/color_scheme.dart';
 import 'package:cloud_billr/views/home/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 late AppColorScheme appColors; // global instance
@@ -22,20 +23,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.light,
-        // scaffoldBackgroundColor: AppColorScheme.light.backgroundColor,
-        // appBarTheme: AppBarTheme(
-        //   backgroundColor: AppColorScheme.light.secondaryColor,
-        //   foregroundColor: AppColorScheme.light.textColor,
-        // ),
+        fontFamily: GoogleFonts.inter().fontFamily,
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        // scaffoldBackgroundColor: AppColorScheme.dark.backgroundColor,
-        // appBarTheme: AppBarTheme(
-        //   backgroundColor: AppColorScheme.dark.secondaryColor,
-        //   foregroundColor: AppColorScheme.dark.textColor,
-        // ),
-        // bcjj
+        fontFamily: GoogleFonts.inter().fontFamily,
       ),
       builder: (context, child) {
         final brightness = MediaQuery.of(context).platformBrightness;
