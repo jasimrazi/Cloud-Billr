@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Cloud-Billr Staging",
+      "name": "Cloud-Billr Staging (Android)",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
@@ -12,7 +12,7 @@
       ]
     },
     {
-      "name": "Cloud-Billr Production",
+      "name": "Cloud-Billr Production (Android)",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
@@ -20,6 +20,12 @@
         "--flavor",
         "production"
       ]
+    },
+    {
+      "name": "Cloud-Billr (iOS / Default)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart"
     }
   ]
 }
