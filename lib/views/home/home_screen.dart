@@ -5,8 +5,11 @@ import 'package:cloud_billr/utils/theme.dart';
 import 'package:cloud_billr/views/create_invoice/create_invoice_screen.dart';
 import 'package:cloud_billr/views/home/widgets/icon_widget.dart';
 import 'package:cloud_billr/views/home/widgets/invoice_card.dart';
+import 'package:cloud_billr/views/notifications/notifications_screen.dart';
 import 'package:cloud_billr/views/past_invoices/past_invoices_screen.dart';
+import 'package:cloud_billr/views/profile/profile_screen.dart';
 import 'package:cloud_billr/views/settings/settings_screen.dart';
+import 'package:cloud_billr/views/templates/templates_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -35,10 +38,16 @@ class _HomeScreenState extends State<HomeScreen> {
         scrolledUnderElevation: 0,
         toolbarHeight: 60,
         leading: Center(
-          child: CircleAvatar(
-            radius: 20,
-            backgroundColor: appColors.secondaryColor,
-            child: Icon(Icons.person, color: appColors.textColor),
+          child: GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ProfileScreen()),
+            ),
+            child: CircleAvatar(
+              radius: 20,
+              backgroundColor: appColors.secondaryColor,
+              child: Icon(Icons.person, color: appColors.textColor),
+            ),
           ),
         ),
         title: const Text(
@@ -50,7 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+            ),
             icon: SvgPicture.asset(
               'assets/icons/notification.svg',
               width: 24,
@@ -115,10 +127,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: appColors.successGreenColor,
                       ),
                     ),
-                    IconWidget(
-                      icon: const Icon(Icons.grid_view_outlined),
-                      label: 'Templates',
-                      color: appColors.violetColor,
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const TemplatesScreen()),
+                      ),
+                      child: IconWidget(
+                        icon: const Icon(Icons.grid_view_outlined),
+                        label: 'Templates',
+                        color: appColors.violetColor,
+                      ),
                     )
                   ],
                 ),
