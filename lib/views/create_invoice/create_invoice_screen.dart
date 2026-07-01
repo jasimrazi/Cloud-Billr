@@ -1,4 +1,6 @@
+import 'package:cloud_billr/controllers/company_provider.dart';
 import 'package:cloud_billr/main.dart';
+import 'package:cloud_billr/models/company_model.dart';
 import 'package:cloud_billr/utils/theme.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/item_card.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/labeled_text_field.dart';
@@ -6,6 +8,7 @@ import 'package:cloud_billr/views/create_invoice/widgets/logo_picker.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/template_picker.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/totals_section.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CreateInvoiceScreen extends StatefulWidget {
   const CreateInvoiceScreen({super.key});
@@ -21,6 +24,19 @@ class _HomeScreenItem {
 class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
   // Dynamically track list of items for the form
   final List<_HomeScreenItem> _items = [_HomeScreenItem()];
+
+  final _companyNameController = TextEditingController();
+  final _companyAddressController = TextEditingController();
+  final _companyContactController = TextEditingController();
+  CompanyModel? _selectedCompany;
+
+  @override
+  void dispose() {
+    _companyNameController.dispose();
+    _companyAddressController.dispose();
+    _companyContactController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,22 +81,96 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
             children: [
               const LogoPicker(),
               const SizedBox(height: AppSpacing.spacingXL),
-              
+
+              // Saved Company Profiles Dropdown Selector
+              Consumer<CompanyProvider>(
+                builder: (context, provider, child) {
+                  final companies = provider.companies;
+                  if (companies.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Select Saved Company Profile',
+                        style: TextStyle(
+                          color: appColors.textColor.withValues(alpha: 0.7),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.spacingS),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.paddingMedium),
+                        decoration: BoxDecoration(
+                          color: appColors.surfaceColor,
+                          borderRadius: AppRadius.medium,
+                          border: Border.all(color: appColors.borderColor),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<CompanyModel>(
+                            value: _selectedCompany,
+                            hint: Text(
+                              'Choose a company...',
+                              style: TextStyle(
+                                color: appColors.textSecondaryColor.withValues(alpha: 0.5),
+                                fontSize: 14,
+                              ),
+                            ),
+                            dropdownColor: appColors.surfaceColor,
+                            icon: Icon(Icons.arrow_drop_down, color: appColors.textColor),
+                            isExpanded: true,
+                            items: companies.map((company) {
+                              return DropdownMenuItem<CompanyModel>(
+                                value: company,
+                                child: Text(
+                                  company.name,
+                                  style: TextStyle(
+                                    color: appColors.textColor,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (CompanyModel? value) {
+                              setState(() {
+                                _selectedCompany = value;
+                                if (value != null) {
+                                  _companyNameController.text = value.name;
+                                  _companyAddressController.text = value.address;
+                                  _companyContactController.text = value.contactDetails;
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.spacingM),
+                    ],
+                  );
+                },
+              ),
+
               // Company Info Section
-              const LabeledTextField(
+              LabeledTextField(
                 label: 'Company Name',
                 hintText: 'Enter company name',
+                controller: _companyNameController,
               ),
               const SizedBox(height: AppSpacing.spacingM),
-              const LabeledTextField(
+              LabeledTextField(
                 label: 'Company Address',
                 hintText: 'Enter company address',
                 maxLines: 3,
+                controller: _companyAddressController,
               ),
               const SizedBox(height: AppSpacing.spacingM),
-              const LabeledTextField(
+              LabeledTextField(
                 label: 'Contact Details',
                 hintText: 'Enter contact details',
+                controller: _companyContactController,
               ),
               const SizedBox(height: AppSpacing.spacingXL),
 
