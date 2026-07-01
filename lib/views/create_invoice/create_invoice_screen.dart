@@ -1,6 +1,8 @@
 import 'package:cloud_billr/controllers/company_provider.dart';
+import 'package:cloud_billr/controllers/invoice_provider.dart';
 import 'package:cloud_billr/main.dart';
 import 'package:cloud_billr/models/company_model.dart';
+import 'package:cloud_billr/models/invoice_model.dart';
 import 'package:cloud_billr/utils/theme.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/item_card.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/labeled_text_field.dart';
@@ -28,6 +30,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
   final _companyNameController = TextEditingController();
   final _companyAddressController = TextEditingController();
   final _companyContactController = TextEditingController();
+  final _customerNameController = TextEditingController();
   CompanyModel? _selectedCompany;
 
   @override
@@ -35,6 +38,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
     _companyNameController.dispose();
     _companyAddressController.dispose();
     _companyContactController.dispose();
+    _customerNameController.dispose();
     super.dispose();
   }
 
@@ -184,9 +188,10 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                 ),
               ),
               const SizedBox(height: AppSpacing.spacingM),
-              const LabeledTextField(
+              LabeledTextField(
                 label: 'Customer Name',
                 hintText: 'Enter customer name',
+                controller: _customerNameController,
               ),
               const SizedBox(height: AppSpacing.spacingM),
               const LabeledTextField(
@@ -278,7 +283,36 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                     ),
                     elevation: 0,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    final clientName = _customerNameController.text.trim();
+                    if (clientName.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Please enter a customer name.')),
+                      );
+                      return;
+                    }
+
+                    final now = DateTime.now();
+                    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    final dateStr = '${months[now.month - 1]} ${now.day}, ${now.year}';
+
+                    final newInvoice = InvoiceModel(
+                      id: UniqueKey().toString(),
+                      invoiceNumber: 'INV-${now.year}-${1000 + (now.microsecond % 9000)}',
+                      clientName: clientName,
+                      status: 'Pending',
+                      amount: '\$1,500.00', // Simulated total amount
+                      date: dateStr,
+                    );
+
+                    Provider.of<InvoiceProvider>(context, listen: false).addInvoice(newInvoice);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Invoice ${newInvoice.invoiceNumber} created successfully!')),
+                    );
+
+                    Navigator.of(context).pop();
+                  },
                   child: const Text(
                     'Save Invoice',
                     style: TextStyle(

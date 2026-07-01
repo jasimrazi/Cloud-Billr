@@ -1,6 +1,6 @@
 
+import 'package:cloud_billr/controllers/invoice_provider.dart';
 import 'package:cloud_billr/main.dart';
-import 'package:cloud_billr/models/invoice_model.dart';
 import 'package:cloud_billr/utils/theme.dart';
 import 'package:cloud_billr/views/create_invoice/create_invoice_screen.dart';
 import 'package:cloud_billr/views/home/widgets/icon_widget.dart';
@@ -12,6 +12,7 @@ import 'package:cloud_billr/views/settings/settings_screen.dart';
 import 'package:cloud_billr/views/templates/templates_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,14 +23,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  List<InvoiceModel> invoices = [
-    {'invoice_number': 'INV-2024-001', 'client_name': 'Tech Solutions Inc', 'status': 'Paid', 'amount': '\$2,500.00', 'date': 'Jan 15, 2025'},
-    {'invoice_number': 'INV-2024-002', 'client_name': 'Design Studio Co', 'status': 'Pending', 'amount': '\$1,800.00', 'date': 'Jan 14, 2024'},
-    {'invoice_number': 'INV-2024-003', 'client_name': 'Marketing Pro Ltd', 'status': 'Paid', 'amount': '\$3,200.00', 'date': 'Jan 13, 2024'}
-  ].map((e) => InvoiceModel.fromMap(e)).toList();
-
   @override
   Widget build(BuildContext context) {
+    final invoices = Provider.of<InvoiceProvider>(context).invoices;
+
     return Scaffold(
       backgroundColor: appColors.backgroundColor,
       appBar: AppBar(

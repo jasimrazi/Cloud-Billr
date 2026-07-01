@@ -1,7 +1,9 @@
+import 'package:cloud_billr/controllers/invoice_provider.dart';
 import 'package:cloud_billr/main.dart';
 import 'package:cloud_billr/utils/theme.dart';
 import 'package:cloud_billr/views/past_invoices/widgets/past_invoice_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PastInvoicesScreen extends StatefulWidget {
   const PastInvoicesScreen({super.key});
@@ -14,46 +16,15 @@ class _PastInvoicesScreenState extends State<PastInvoicesScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
-  final List<Map<String, String>> _mockInvoices = [
-    {
-      'title': 'Website Development',
-      'client': 'Tech Solutions Inc.',
-      'date': 'Jan 15, 2024',
-      'amount': '\$2,500.00',
-    },
-    {
-      'title': 'Marketing Campaign',
-      'client': 'Global Brands Ltd.',
-      'date': 'Jan 12, 2024',
-      'amount': '\$1,800.00',
-    },
-    {
-      'title': 'Consulting Services',
-      'client': 'Innovation Hub',
-      'date': 'Jan 10, 2024',
-      'amount': '\$3,200.00',
-    },
-    {
-      'title': 'Product Design',
-      'client': 'Creative Studio',
-      'date': 'Jan 8, 2024',
-      'amount': '\$1,500.00',
-    },
-    {
-      'title': 'Software License',
-      'client': 'Digital Systems',
-      'date': 'Jan 5, 2024',
-      'amount': '\$4,800.00',
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
-    // Filter mock invoices based on search query
-    final filteredInvoices = _mockInvoices.where((invoice) {
+    final invoices = Provider.of<InvoiceProvider>(context).invoices;
+
+    // Filter invoices based on search query
+    final filteredInvoices = invoices.where((invoice) {
       final query = _searchQuery.toLowerCase();
-      final titleMatch = invoice['title']?.toLowerCase().contains(query) ?? false;
-      final clientMatch = invoice['client']?.toLowerCase().contains(query) ?? false;
+      final titleMatch = invoice.invoiceNumber.toLowerCase().contains(query);
+      final clientMatch = invoice.clientName.toLowerCase().contains(query);
       return titleMatch || clientMatch;
     }).toList();
 
@@ -145,10 +116,10 @@ class _PastInvoicesScreenState extends State<PastInvoicesScreen> {
                         itemBuilder: (context, index) {
                           final invoice = filteredInvoices[index];
                           return PastInvoiceCard(
-                            title: invoice['title']!,
-                            clientName: invoice['client']!,
-                            date: invoice['date']!,
-                            amount: invoice['amount']!,
+                            title: invoice.invoiceNumber,
+                            clientName: invoice.clientName,
+                            date: invoice.date,
+                            amount: invoice.amount,
                           );
                         },
                       ),
