@@ -27,222 +27,251 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.mainPadding),
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 60,
-            surfaceTintColor: Colors.transparent,
-            leading: CircleAvatar(
-              backgroundColor: appColors.secondaryColor,
-              child: Icon(Icons.person, color: appColors.textColor,),
+    return Scaffold(
+      backgroundColor: appColors.backgroundColor,
+      appBar: AppBar(
+        backgroundColor: appColors.backgroundColor,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        toolbarHeight: 60,
+        leading: Center(
+          child: CircleAvatar(
+            radius: 20,
+            backgroundColor: appColors.secondaryColor,
+            child: Icon(Icons.person, color: appColors.textColor),
+          ),
+        ),
+        title: const Text(
+          'Invoices',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: SvgPicture.asset(
+              'assets/icons/notification.svg',
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(
+                appColors.textColor,
+                BlendMode.srcIn,
+              ),
             ),
-            title: Text('Invoices'),
-            actions: [
-              // IconButton(onPressed: (){}, icon: Icon(Icons.notifications_none))
-              SvgPicture.asset(
-                'assets/icons/notification.svg',
-                width: 24,
-                height: 24,
-                colorFilter: ColorFilter.mode(
-                  appColors.textColor, // Optional: change SVG color
-                  BlendMode.srcIn,
+          ),
+          const SizedBox(width: AppSpacing.paddingSmall),
+        ],
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.mainPadding,
+            vertical: AppSpacing.paddingSmall,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: AppSpacing.spacingL),
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: appColors.shadowColor,
+                      offset: const Offset(0, 1),
+                      blurRadius: 2,
+                      blurStyle: BlurStyle.outer,
+                    )
+                  ],
+                  borderRadius: AppRadius.medium,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.paddingSmall,
+                  vertical: AppSpacing.paddingMedium,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const CreateInvoiceScreen()),
+                      ),
+                      child: IconWidget(
+                        icon: const Icon(Icons.add),
+                        label: 'New Invoice',
+                        color: appColors.primaryColor,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const PastInvoicesScreen()),
+                      ),
+                      child: IconWidget(
+                        icon: const Icon(Icons.description_outlined),
+                        label: 'View All',
+                        color: appColors.successGreenColor,
+                      ),
+                    ),
+                    IconWidget(
+                      icon: const Icon(Icons.grid_view_outlined),
+                      label: 'Templates',
+                      color: appColors.violetColor,
+                    )
+                  ],
                 ),
               ),
-            ],
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: AppSpacing.spacingL,),
-                Container(
-                  decoration: BoxDecoration(
-                    // border: BoxBorder.fromLTRB(
-                    //   bottom: BorderSide(color: appColors.borderColor, width: 2),
-                    //   right: BorderSide(color: appColors.borderColor, width: 1),
-                    //   left: BorderSide(color: appColors.borderColor, width: 1),
-                    // ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: appColors.shadowColor,
-                        offset: Offset(0, 1),
-                        blurRadius: 2,
-                        blurStyle: BlurStyle.outer
-                    
-                      )
-                    ],
-                    borderRadius: AppRadius.medium,
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.paddingSmall, vertical: AppSpacing.paddingMedium),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const CreateInvoiceScreen()),
-                        ),
-                        child: IconWidget(
-                          icon: const Icon(Icons.add), 
-                          label: 'New Invoice',
-                          color: appColors.primaryColor
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const PastInvoicesScreen()),
-                        ),
-                        child: IconWidget(
-                          icon: const Icon(Icons.description_outlined), 
-                          label: 'View All',
-                          color: appColors.successGreenColor
-                        ),
-                      ),
-                      IconWidget(
-                        icon: const Icon(Icons.grid_view_outlined), 
-                        label: 'Templates',
-                        color: appColors.violetColor
-                      )
-                    ],
-                  ),
+              SizedBox(height: AppSpacing.spacingL),
+              Container(
+                padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+                decoration: BoxDecoration(
+                  color: appColors.secondaryColor,
+                  borderRadius: AppRadius.medium,
                 ),
-                    
-                SizedBox(height: AppSpacing.spacingL,),
-                Container(
-                  padding: EdgeInsets.all(AppSpacing.paddingMedium),
-                  decoration: BoxDecoration(
-                    color: appColors.secondaryColor,
-                    borderRadius: AppRadius.medium,
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.cloud_done_outlined, color: appColors.successGreenColor),
-                      SizedBox(width: 20,),
-                      Expanded(
-                        child: Text('Last backup: Today at 6:00 PM', style: TextStyle(
-                          color: appColors.textSecondaryColor
-                        ),),
+                child: Row(
+                  children: [
+                    Icon(Icons.cloud_done_outlined, color: appColors.successGreenColor),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Text(
+                        'Last backup: Today at 6:00 PM',
+                        style: TextStyle(color: appColors.textSecondaryColor),
                       ),
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: appColors.successGreenColor,
-                          shape: BoxShape.circle
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: appColors.successGreenColor,
+                        shape: BoxShape.circle,
+                      ),
+                    )
+                  ],
                 ),
-                SizedBox(height: AppSpacing.spacingL,),
-                Text('Recent Invoices', style: TextStyle(
+              ),
+              SizedBox(height: AppSpacing.spacingL),
+              Text(
+                'Recent Invoices',
+                style: TextStyle(
                   color: appColors.textColor,
                   fontWeight: FontWeight.w400,
                   fontSize: 16,
-                ),),
-                SizedBox(height: AppSpacing.spacingM,),
-                ListView.builder(
-                  itemCount: invoices.length,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return InvoiceCard(
-                      invoice: invoices[index],
-                    );
-                  },
                 ),
-                SizedBox(height: AppSpacing.spacingS,),
-                Container(
-                  padding: EdgeInsets.all(AppSpacing.paddingMedium),
-                  decoration: BoxDecoration(
-                    borderRadius: AppRadius.medium,
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 2,
-                        color: appColors.shadowColor,
-                        blurStyle: BlurStyle.outer
-                      )
-                    ]
-                  ),
+              ),
+              SizedBox(height: AppSpacing.spacingM),
+              ListView.builder(
+                itemCount: invoices.length,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return InvoiceCard(
+                    invoice: invoices[index],
+                  );
+                },
+              ),
+              SizedBox(height: AppSpacing.spacingS),
+              Container(
+                padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+                decoration: BoxDecoration(
+                  borderRadius: AppRadius.medium,
+                  boxShadow: [
+                    BoxShadow(
+                      offset: const Offset(0, 1),
+                      blurRadius: 2,
+                      color: appColors.shadowColor,
+                      blurStyle: BlurStyle.outer,
+                    )
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "This Month's Revenue",
+                          style: TextStyle(
+                            color: appColors.textSecondaryColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          '\$12,500.00',
+                          style: TextStyle(
+                            color: appColors.textColor,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Pending Invoices',
+                          style: TextStyle(
+                            color: appColors.textSecondaryColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          '\$3,200.00',
+                          style: TextStyle(
+                            color: appColors.textColor,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: AppSpacing.spacingL),
+              Divider(
+                color: appColors.borderColor,
+                thickness: 2,
+              ),
+              GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                ),
+                behavior: HitTestBehavior.opaque,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('This Month\'s Revenue', style: TextStyle(
-                            color: appColors.textSecondaryColor,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14
-                          ),),
-                            
-                          Text('\$12,500.00',style: TextStyle(
-                            color: appColors.textColor,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 20
-                          ),),
-                        ],
+                      SvgPicture.asset(
+                        'assets/icons/settings.svg',
+                        colorFilter: ColorFilter.mode(appColors.textSecondaryColor, BlendMode.srcIn),
+                        width: 24,
+                        height: 24,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Pending Invoices', style: TextStyle(
-                            color: appColors.textSecondaryColor,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14
-                          ),),
-                            
-                          Text('\$3,200.00',style: TextStyle(
+                      const SizedBox(width: AppSpacing.spacingS),
+                      Expanded(
+                        child: Text(
+                          'Settings',
+                          style: TextStyle(
                             color: appColors.textColor,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 20
-                          ),),
-                        ],
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
+                      Icon(Icons.keyboard_arrow_right, color: appColors.textSecondaryColor)
                     ],
                   ),
                 ),
-                SizedBox(height: AppSpacing.spacingL,),
-                Divider(
-                  color: appColors.borderColor,
-                  thickness: 2,
-                ),
-                InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SettingsScreen()),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/settings.svg',
-                          colorFilter: ColorFilter.mode(appColors.textSecondaryColor, BlendMode.srcIn),
-                          width: 24,
-                          height: 24,
-                        ),
-                        SizedBox(width: AppSpacing.spacingS,),
-                        Expanded(
-                          child: Text('Settings', style: TextStyle(
-                            color: appColors.textColor,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16
-                          ),),
-                        ),
-                        Icon(Icons.keyboard_arrow_right, color: appColors.textSecondaryColor)
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: AppSpacing.spacingM,),
-                    
-              ],
-            ),
+              ),
+              SizedBox(height: AppSpacing.spacingM),
+            ],
           ),
         ),
       ),

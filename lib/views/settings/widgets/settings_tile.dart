@@ -27,8 +27,9 @@ class SettingsTile extends StatelessWidget {
     final defaultIconColor = iconColor ?? appColors.textSecondaryColor;
     final defaultTextColor = textColor ?? appColors.textColor;
 
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12.0),
         child: Column(

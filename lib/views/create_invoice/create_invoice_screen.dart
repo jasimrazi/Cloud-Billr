@@ -182,7 +182,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                 height: AppSpacing.buttonHeight,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade600, // Rich primary color
+                    backgroundColor: appColors.primaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: AppRadius.medium,
                     ),
