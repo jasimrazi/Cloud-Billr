@@ -12,7 +12,6 @@ import 'package:cloud_billr/views/create_invoice/widgets/template_picker.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/totals_section.dart';
 import 'package:cloud_billr/views/settings/add_edit_company_screen.dart';
 import 'package:cloud_billr/views/settings/add_edit_customer_screen.dart';
-import 'package:cloud_billr/views/settings/company_list_screen.dart';
 import 'package:cloud_billr/views/settings/customer_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +31,6 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
   // Dynamically track list of items for the form
   final List<_HomeScreenItem> _items = [_HomeScreenItem()];
 
-  CompanyModel? _selectedCompany;
   CustomerModel? _selectedCustomer;
 
   @override
@@ -142,7 +140,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Saved Company Profiles Dropdown Selector
+              // Company Profile Header Preview
               Consumer<CompanyProvider>(
                 builder: (context, provider, child) {
                   final companies = provider.companies;
@@ -168,7 +166,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                           ),
                           const SizedBox(height: AppSpacing.spacingXS),
                           Text(
-                            'You must create a company profile in settings before creating an invoice.',
+                            'You must create your company profile in settings before creating an invoice.',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: appColors.textSecondaryColor,
@@ -185,14 +183,17 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                                   borderRadius: AppRadius.medium,
                                 ),
                               ),
-                              onPressed: () {
-                                Navigator.push(
+                              onPressed: () async {
+                                final result = await Navigator.push<CompanyModel>(
                                   context,
-                                  MaterialPageRoute(builder: (_) => const CompanyListScreen()),
+                                  MaterialPageRoute(builder: (_) => const AddEditCompanyScreen()),
                                 );
+                                if (result != null && context.mounted) {
+                                  await provider.addCompany(result);
+                                }
                               },
                               child: const Text(
-                                'Manage Company Profiles',
+                                'Create Company Profile',
                                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                               ),
                             ),
@@ -202,11 +203,13 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                     );
                   }
 
+                  final myCompany = companies.first;
+
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Select Saved Company Profile (Required)',
+                        'Billing From',
                         style: TextStyle(
                           color: appColors.textColor,
                           fontSize: 14,
@@ -215,132 +218,56 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                       ),
                       const SizedBox(height: AppSpacing.spacingS),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.paddingMedium),
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(AppSpacing.paddingMedium),
                         decoration: BoxDecoration(
-                          color: appColors.surfaceColor,
+                          color: appColors.surfaceColor.withValues(alpha: 0.5),
                           borderRadius: AppRadius.medium,
-                          border: Border.all(
-                            color: _selectedCompany == null ? appColors.redColor.withValues(alpha: 0.5) : appColors.borderColor,
-                          ),
+                          border: Border.all(color: appColors.borderColor),
                         ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<CompanyModel>(
-                            value: _selectedCompany,
-                            hint: Text(
-                              'Choose a company...',
-                              style: TextStyle(
-                                color: appColors.textSecondaryColor.withValues(alpha: 0.5),
-                                fontSize: 14,
-                              ),
-                            ),
-                            dropdownColor: appColors.surfaceColor,
-                            icon: Icon(Icons.arrow_drop_down, color: appColors.textColor),
-                            isExpanded: true,
-                            items: companies.map((company) {
-                              return DropdownMenuItem<CompanyModel>(
-                                value: company,
-                                child: Text(
-                                  company.name,
-                                  style: TextStyle(
-                                    color: appColors.textColor,
-                                    fontSize: 14,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildCompanyLogoWidget(myCompany.logoPath),
+                            const SizedBox(width: AppSpacing.spacingM),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    myCompany.name,
+                                    style: TextStyle(
+                                      color: appColors.textColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
                                   ),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (CompanyModel? value) {
-                              setState(() {
-                                _selectedCompany = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton.icon(
-                            onPressed: () async {
-                              final result = await Navigator.push<CompanyModel>(
-                                context,
-                                MaterialPageRoute(builder: (_) => const AddEditCompanyScreen()),
-                              );
-
-                              if (result != null && context.mounted) {
-                                final companyProvider = Provider.of<CompanyProvider>(context, listen: false);
-                                await companyProvider.addCompany(result);
-                                setState(() {
-                                  _selectedCompany = result;
-                                });
-                              }
-                            },
-                            icon: Icon(Icons.add, color: appColors.primaryColor, size: 16),
-                            label: Text(
-                              'Add Company',
-                              style: TextStyle(
-                                color: appColors.primaryColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (_selectedCompany != null) ...[
-                        const SizedBox(height: AppSpacing.spacingM),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(AppSpacing.paddingMedium),
-                          decoration: BoxDecoration(
-                            color: appColors.surfaceColor.withValues(alpha: 0.5),
-                            borderRadius: AppRadius.medium,
-                            border: Border.all(color: appColors.borderColor),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildCompanyLogoWidget(_selectedCompany!.logoPath),
-                              const SizedBox(width: AppSpacing.spacingM),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
+                                  if (myCompany.address.isNotEmpty) ...[
+                                    const SizedBox(height: 4),
                                     Text(
-                                      _selectedCompany!.name,
+                                      myCompany.address,
                                       style: TextStyle(
-                                        color: appColors.textColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
+                                        color: appColors.textSecondaryColor,
+                                        fontSize: 13,
                                       ),
                                     ),
-                                    if (_selectedCompany!.address.isNotEmpty) ...[
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        _selectedCompany!.address,
-                                        style: TextStyle(
-                                          color: appColors.textSecondaryColor,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                    ],
-                                    if (_selectedCompany!.contactDetails.isNotEmpty) ...[
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        _selectedCompany!.contactDetails,
-                                        style: TextStyle(
-                                          color: appColors.textSecondaryColor.withValues(alpha: 0.8),
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
                                   ],
-                                ),
+                                  if (myCompany.contactDetails.isNotEmpty) ...[
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      myCompany.contactDetails,
+                                      style: TextStyle(
+                                        color: appColors.textSecondaryColor.withValues(alpha: 0.8),
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                       const SizedBox(height: AppSpacing.spacingM),
                     ],
                   );
@@ -406,6 +333,14 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                         ],
                       ),
                     );
+                  }
+
+                  if (customers.length == 1 && _selectedCustomer == null) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      setState(() {
+                        _selectedCustomer = customers.first;
+                      });
+                    });
                   }
 
                   return Column(
@@ -647,9 +582,10 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                     elevation: 0,
                   ),
                   onPressed: () {
-                    if (_selectedCompany == null) {
+                    final companyProvider = Provider.of<CompanyProvider>(context, listen: false);
+                    if (companyProvider.companies.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please select a company profile first.')),
+                        const SnackBar(content: Text('Please create your company profile first.')),
                       );
                       return;
                     }
