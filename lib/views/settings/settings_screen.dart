@@ -1,6 +1,7 @@
 import 'package:cloud_billr/main.dart';
 import 'package:cloud_billr/utils/theme.dart';
 import 'package:cloud_billr/views/settings/company_list_screen.dart';
+import 'package:cloud_billr/views/settings/customer_list_screen.dart';
 import 'package:cloud_billr/views/settings/widgets/settings_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -115,6 +116,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const CompanyListScreen()),
+                );
+              },
+            ),
+            _buildDivider(),
+            SettingsTile(
+              leadingIcon: Icons.people_outline,
+              title: 'Manage Customers',
+              subtitle: 'Add or edit customer profiles',
+              trailing: _buildTrailingTextWithChevron(''),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const CustomerListScreen()),
                 );
               },
             ),

@@ -61,6 +61,29 @@ class DatabaseHelper {
     return await db.delete('companies', where: 'id = ?', whereArgs: [id]);
   }
 
+  // --- CRUD HELPERS FOR CUSTOMERS ---
+
+  Future<int> insertCustomer(Map<String, dynamic> row) async {
+    final db = await instance.database;
+    return await db.insert('customers', row, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<List<Map<String, dynamic>>> queryAllCustomers() async {
+    final db = await instance.database;
+    return await db.query('customers');
+  }
+
+  Future<int> updateCustomer(Map<String, dynamic> row) async {
+    final db = await instance.database;
+    final String id = row['id'];
+    return await db.update('customers', row, where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<int> deleteCustomer(String id) async {
+    final db = await instance.database;
+    return await db.delete('customers', where: 'id = ?', whereArgs: [id]);
+  }
+
   // --- CRUD HELPERS FOR INVOICES ---
 
   Future<int> insertInvoice(Map<String, dynamic> row) async {

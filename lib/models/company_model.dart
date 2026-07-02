@@ -3,12 +3,14 @@ class CompanyModel {
   final String name;
   final String address;
   final String contactDetails;
+  final String? logoPath;
 
   CompanyModel({
     required this.id,
     required this.name,
     required this.address,
     required this.contactDetails,
+    this.logoPath,
   });
 
   CompanyModel copyWith({
@@ -16,12 +18,14 @@ class CompanyModel {
     String? name,
     String? address,
     String? contactDetails,
+    String? logoPath,
   }) {
     return CompanyModel(
       id: id ?? this.id,
       name: name ?? this.name,
       address: address ?? this.address,
       contactDetails: contactDetails ?? this.contactDetails,
+      logoPath: logoPath ?? this.logoPath,
     );
   }
 
@@ -31,6 +35,7 @@ class CompanyModel {
       'name': name,
       'address': address,
       'contactDetails': contactDetails,
+      'logoPath': logoPath,
     };
   }
 
@@ -40,6 +45,7 @@ class CompanyModel {
       name: map['name'] ?? '',
       address: map['address'] ?? '',
       contactDetails: map['contactDetails'] ?? '',
+      logoPath: map['logoPath'],
     );
   }
 }
