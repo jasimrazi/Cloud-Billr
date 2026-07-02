@@ -1,7 +1,9 @@
+import 'package:cloud_billr/controllers/company_provider.dart';
 import 'package:cloud_billr/controllers/theme_provider.dart';
 import 'package:cloud_billr/main.dart';
+import 'package:cloud_billr/models/company_model.dart';
 import 'package:cloud_billr/utils/theme.dart';
-import 'package:cloud_billr/views/settings/company_list_screen.dart';
+import 'package:cloud_billr/views/settings/add_edit_company_screen.dart';
 import 'package:cloud_billr/views/settings/customer_list_screen.dart';
 import 'package:cloud_billr/views/settings/widgets/settings_tile.dart';
 import 'package:flutter/material.dart';
@@ -55,14 +57,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             SettingsTile(
               leadingIcon: Icons.business,
-              title: 'Manage Companies',
-              subtitle: 'Add or edit company business profiles',
+              title: 'My Company Profile',
+              subtitle: 'Edit your business name, address, and logo',
               trailing: _buildTrailingTextWithChevron(''),
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                final companyProvider = Provider.of<CompanyProvider>(context, listen: false);
+                final primaryCompany = companyProvider.companies.isNotEmpty
+                    ? companyProvider.companies.first
+                    : null;
+
+                final result = await Navigator.push<CompanyModel>(
                   context,
-                  MaterialPageRoute(builder: (_) => const CompanyListScreen()),
+                  MaterialPageRoute(
+                    builder: (_) => AddEditCompanyScreen(company: primaryCompany),
+                  ),
                 );
+
+                if (result != null && context.mounted) {
+                  if (primaryCompany != null) {
+                    await companyProvider.updateCompany(result);
+                  } else {
+                    await companyProvider.addCompany(result);
+                  }
+                }
               },
             ),
             _buildDivider(),
