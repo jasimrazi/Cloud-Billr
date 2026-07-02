@@ -4,12 +4,26 @@ import 'package:cloud_billr/utils/color_scheme.dart';
 import 'package:cloud_billr/views/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 late AppColorScheme appColors; // global instance
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  ThemeMode initialThemeMode = ThemeMode.system;
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final modeIndex = prefs.getInt('theme_mode_pref');
+    if (modeIndex != null) {
+      initialThemeMode = ThemeMode.values[modeIndex];
+    }
+  } catch (e) {
+    debugPrint('Error loading theme preference on launch: $e');
+  }
+
   runApp(MultiProvider(
-    providers: providers,
+    providers: createProviders(initialThemeMode: initialThemeMode),
     child: const MyApp(),
   ));
 }
