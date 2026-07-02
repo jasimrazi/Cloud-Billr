@@ -1,4 +1,5 @@
 import 'package:cloud_billr/controllers/providers.dart';
+import 'package:cloud_billr/controllers/theme_provider.dart';
 import 'package:cloud_billr/utils/color_scheme.dart';
 import 'package:cloud_billr/views/home/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +30,14 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Inter',
       ),
       builder: (context, child) {
-        final brightness = MediaQuery.of(context).platformBrightness;
-        appColors = brightness == Brightness.dark? AppColorScheme.dark : AppColorScheme.light;
+        final themeProvider = Provider.of<ThemeProvider>(context);
+        final brightness = themeProvider.themeMode == ThemeMode.system
+            ? MediaQuery.of(context).platformBrightness
+            : (themeProvider.themeMode == ThemeMode.dark ? Brightness.dark : Brightness.light);
+        appColors = brightness == Brightness.dark ? AppColorScheme.dark : AppColorScheme.light;
         return child!;
       },
-      themeMode: ThemeMode.system,
+      themeMode: Provider.of<ThemeProvider>(context).themeMode,
       
       home: Scaffold(
         body: Center(

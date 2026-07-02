@@ -1,9 +1,11 @@
+import 'package:cloud_billr/controllers/theme_provider.dart';
 import 'package:cloud_billr/main.dart';
 import 'package:cloud_billr/utils/theme.dart';
 import 'package:cloud_billr/views/settings/company_list_screen.dart';
 import 'package:cloud_billr/views/settings/customer_list_screen.dart';
 import 'package:cloud_billr/views/settings/widgets/settings_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -14,11 +16,15 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _cloudBackupEnabled = true;
-  bool _darkModeEnabled = false;
   bool _notificationsEnabled = true;
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.themeMode == ThemeMode.dark ||
+        (themeProvider.themeMode == ThemeMode.system &&
+            MediaQuery.of(context).platformBrightness == Brightness.dark);
+
     return Scaffold(
       backgroundColor: appColors.backgroundColor,
       appBar: AppBar(
@@ -180,13 +186,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               leadingIcon: Icons.dark_mode_outlined,
               title: 'Dark Mode',
               trailing: Switch.adaptive(
-                value: _darkModeEnabled,
+                value: isDark,
                 activeTrackColor: appColors.primaryColor.withValues(alpha: 0.5),
                 activeThumbColor: appColors.primaryColor,
                 onChanged: (value) {
-                  setState(() {
-                    _darkModeEnabled = value;
-                  });
+                  themeProvider.toggleTheme(value);
                 },
               ),
             ),
