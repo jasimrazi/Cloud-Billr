@@ -53,66 +53,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           physics: const BouncingScrollPhysics(),
           children: [
-            // Account Section
-            _buildSectionHeader('Account'),
-            Container(
-              padding: const EdgeInsets.all(AppSpacing.paddingSmall),
-              decoration: BoxDecoration(
-                color: appColors.surfaceColor,
-                borderRadius: AppRadius.medium,
-                border: Border.all(color: appColors.borderColor),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: appColors.backgroundColor,
-                      borderRadius: AppRadius.medium,
-                      border: Border.all(color: appColors.borderColor),
-                    ),
-                    child: Icon(
-                      Icons.business,
-                      color: appColors.textSecondaryColor,
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.spacingM),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.paddingMedium,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: appColors.backgroundColor,
-                        borderRadius: AppRadius.medium,
-                        border: Border.all(color: appColors.borderColor),
-                      ),
-                      child: Text(
-                        'Company Logo',
-                        style: TextStyle(
-                          color: appColors.textSecondaryColor,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.spacingM),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Update Logo',
-                      style: TextStyle(
-                        color: appColors.primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: AppSpacing.spacingM),
             SettingsTile(
               leadingIcon: Icons.business,
               title: 'Manage Companies',
