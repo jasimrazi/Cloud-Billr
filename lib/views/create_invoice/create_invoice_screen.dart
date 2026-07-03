@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:cloud_billr/controllers/company_provider.dart';
+import 'package:cloud_billr/controllers/create_invoice_provider.dart';
 import 'package:cloud_billr/controllers/customer_provider.dart';
+import 'package:cloud_billr/controllers/invoice_config_provider.dart';
 import 'package:cloud_billr/controllers/invoice_provider.dart';
 import 'package:cloud_billr/main.dart';
 import 'package:cloud_billr/models/company_model.dart';
@@ -10,6 +12,7 @@ import 'package:cloud_billr/utils/theme.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/item_card.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/template_picker.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/totals_section.dart';
+import 'package:cloud_billr/views/invoices/invoice_detail_screen.dart';
 import 'package:cloud_billr/views/settings/add_edit_company_screen.dart';
 import 'package:cloud_billr/views/settings/add_edit_customer_screen.dart';
 import 'package:cloud_billr/views/settings/customer_list_screen.dart';
@@ -23,19 +26,43 @@ class CreateInvoiceScreen extends StatefulWidget {
   State<CreateInvoiceScreen> createState() => _CreateInvoiceScreenState();
 }
 
-class _HomeScreenItem {
-  final Key key = UniqueKey();
-}
-
 class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
-  // Dynamically track list of items for the form
-  final List<_HomeScreenItem> _items = [_HomeScreenItem()];
-
-  CustomerModel? _selectedCustomer;
+  bool _configApplied = false;
 
   @override
-  void dispose() {
-    super.dispose();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_configApplied) {
+      _applyConfig();
+      _configApplied = true;
+    }
+  }
+
+  void _applyConfig() {
+    final config =
+        Provider.of<InvoiceConfigProvider>(context, listen: false).config;
+    final invoiceProvider =
+        Provider.of<InvoiceProvider>(context, listen: false);
+    final draftProvider =
+        Provider.of<CreateInvoiceProvider>(context, listen: false);
+
+    draftProvider.applyConfig(
+      taxEnabled: config.taxEnabled,
+      taxLabel: config.taxLabel,
+      taxRate: config.taxRate,
+      taxIsInclusive: config.taxIsInclusive,
+      discountEnabled: config.discountEnabled,
+      discountType: config.discountType,
+      currencySymbol: config.currencySymbol,
+    );
+
+    if (draftProvider.invoiceNumber.isEmpty) {
+      final number = invoiceProvider.generateInvoiceNumber(
+        config.invoiceNumberFormat,
+        invoiceProvider.nextSequenceNumber,
+      );
+      draftProvider.setInvoiceNumber(number);
+    }
   }
 
   Widget _buildCompanyLogoWidget(String? logoPath) {
@@ -43,29 +70,52 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
       return CircleAvatar(
         radius: 20,
         backgroundColor: appColors.secondaryColor,
-        child: Icon(Icons.business, color: appColors.textSecondaryColor, size: 20),
+        child:
+            Icon(Icons.business, color: appColors.textSecondaryColor, size: 20),
       );
     }
-    
+
     if (logoPath.startsWith('preset:')) {
       final parts = logoPath.split(':');
       final iconName = parts.length > 1 ? parts[1] : 'business';
       final colorHex = parts.length > 2 ? parts[2] : '0xFF2196F3';
       final color = Color(int.parse(colorHex));
-      
+
       IconData iconData;
       switch (iconName) {
-        case 'store': iconData = Icons.store; break;
-        case 'computer': iconData = Icons.computer; break;
-        case 'build': iconData = Icons.build; break;
-        case 'shopping_bag': iconData = Icons.shopping_bag; break;
-        case 'account_balance': iconData = Icons.account_balance; break;
-        case 'spa': iconData = Icons.spa; break;
-        case 'restaurant': iconData = Icons.restaurant; break;
-        case 'flash_on': iconData = Icons.flash_on; break;
-        case 'star': iconData = Icons.star; break;
-        case 'palette': iconData = Icons.palette; break;
-        case 'attach_money': iconData = Icons.attach_money; break;
+        case 'store':
+          iconData = Icons.store;
+          break;
+        case 'computer':
+          iconData = Icons.computer;
+          break;
+        case 'build':
+          iconData = Icons.build;
+          break;
+        case 'shopping_bag':
+          iconData = Icons.shopping_bag;
+          break;
+        case 'account_balance':
+          iconData = Icons.account_balance;
+          break;
+        case 'spa':
+          iconData = Icons.spa;
+          break;
+        case 'restaurant':
+          iconData = Icons.restaurant;
+          break;
+        case 'flash_on':
+          iconData = Icons.flash_on;
+          break;
+        case 'star':
+          iconData = Icons.star;
+          break;
+        case 'palette':
+          iconData = Icons.palette;
+          break;
+        case 'attach_money':
+          iconData = Icons.attach_money;
+          break;
         case 'business':
         default:
           iconData = Icons.business;
@@ -99,6 +149,70 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
     );
   }
 
+  Future<void> _saveInvoice(BuildContext context) async {
+    final companyProvider =
+        Provider.of<CompanyProvider>(context, listen: false);
+    final draftProvider =
+        Provider.of<CreateInvoiceProvider>(context, listen: false);
+    final invoiceProvider =
+        Provider.of<InvoiceProvider>(context, listen: false);
+
+    if (companyProvider.companies.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Please create your company profile first.')),
+      );
+      return;
+    }
+
+    if (draftProvider.selectedCustomer == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Please select a customer profile first.')),
+      );
+      return;
+    }
+
+    final grandTotal = draftProvider.grandTotal;
+    final symbol = draftProvider.currencySymbol;
+    final invoiceNumber = draftProvider.invoiceNumber.isNotEmpty
+        ? draftProvider.invoiceNumber
+        : invoiceProvider.generateInvoiceNumber(
+            'INV-{YEAR}-{SEQ}', invoiceProvider.nextSequenceNumber);
+
+    final now = DateTime.now();
+    final months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    final dateStr = '${months[now.month - 1]} ${now.day}, ${now.year}';
+
+    final newInvoice = InvoiceModel(
+      id: UniqueKey().toString(),
+      invoiceNumber: invoiceNumber,
+      clientName: draftProvider.selectedCustomer!.name,
+      status: 'Pending',
+      amount: '$symbol${grandTotal.toStringAsFixed(2)}',
+      date: dateStr,
+      totalAmount: grandTotal,
+    );
+
+    await invoiceProvider.addInvoice(newInvoice);
+    draftProvider.reset();
+
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Invoice $invoiceNumber created successfully!'),
+          backgroundColor: appColors.primaryColor,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.medium),
+        ),
+      );
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,7 +223,10 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
         scrolledUnderElevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: appColors.textColor),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            Provider.of<CreateInvoiceProvider>(context, listen: false).reset();
+            Navigator.of(context).pop();
+          },
         ),
         title: Text(
           'Create Invoice',
@@ -121,14 +238,54 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
         ),
         centerTitle: true,
         actions: [
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              'Preview',
-              style: TextStyle(
-                color: appColors.primaryColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+          Consumer<CreateInvoiceProvider>(
+            builder: (ctx, draft, _) => TextButton(
+              onPressed: () {
+                final customer = draft.selectedCustomer;
+                if (customer == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content:
+                            Text('Select a customer to preview the invoice.')),
+                  );
+                  return;
+                }
+                final symbol = draft.currencySymbol;
+                final now = DateTime.now();
+                final months = [
+                  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+                ];
+                final preview = InvoiceModel(
+                  id: 'preview',
+                  invoiceNumber: draft.invoiceNumber.isNotEmpty
+                      ? draft.invoiceNumber
+                      : 'PREVIEW',
+                  clientName: customer.name,
+                  status: 'Pending',
+                  amount:
+                      '$symbol${draft.grandTotal.toStringAsFixed(2)}',
+                  date:
+                      '${months[now.month - 1]} ${now.day}, ${now.year}',
+                  totalAmount: draft.grandTotal,
+                );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => InvoiceDetailScreen(
+                      invoice: preview,
+                      previewMode: true,
+                    ),
+                  ),
+                );
+              },
+              child: Text(
+                'Preview',
+                style: TextStyle(
+                  color: appColors.primaryColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
@@ -140,21 +297,51 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Company Profile Header Preview
+              // Invoice Number Preview
+              Consumer<CreateInvoiceProvider>(
+                builder: (_, draft, __) => draft.invoiceNumber.isNotEmpty
+                    ? Padding(
+                        padding:
+                            const EdgeInsets.only(bottom: AppSpacing.spacingM),
+                        child: Row(
+                          children: [
+                            Icon(Icons.tag,
+                                size: 14,
+                                color: appColors.textSecondaryColor),
+                            const SizedBox(width: 6),
+                            Text(
+                              draft.invoiceNumber,
+                              style: TextStyle(
+                                color: appColors.textSecondaryColor,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+
+              // Company Profile Header
               Consumer<CompanyProvider>(
                 builder: (context, provider, child) {
                   final companies = provider.companies;
                   if (companies.isEmpty) {
                     return Container(
-                      padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+                      padding:
+                          const EdgeInsets.all(AppSpacing.paddingMedium),
                       decoration: BoxDecoration(
                         color: appColors.surfaceColor,
                         borderRadius: AppRadius.medium,
-                        border: Border.all(color: appColors.redColor.withValues(alpha: 0.5)),
+                        border: Border.all(
+                            color:
+                                appColors.redColor.withValues(alpha: 0.5)),
                       ),
                       child: Column(
                         children: [
-                          Icon(Icons.warning_amber_rounded, color: appColors.redColor, size: 36),
+                          Icon(Icons.warning_amber_rounded,
+                              color: appColors.redColor, size: 36),
                           const SizedBox(height: AppSpacing.spacingS),
                           Text(
                             'No Company Profile Found',
@@ -184,9 +371,12 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                                 ),
                               ),
                               onPressed: () async {
-                                final result = await Navigator.push<CompanyModel>(
+                                final result =
+                                    await Navigator.push<CompanyModel>(
                                   context,
-                                  MaterialPageRoute(builder: (_) => const AddEditCompanyScreen()),
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          const AddEditCompanyScreen()),
                                 );
                                 if (result != null && context.mounted) {
                                   await provider.addCompany(result);
@@ -194,7 +384,9 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                               },
                               child: const Text(
                                 'Create Company Profile',
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -204,7 +396,6 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                   }
 
                   final myCompany = companies.first;
-
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -219,11 +410,13 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                       const SizedBox(height: AppSpacing.spacingS),
                       Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+                        padding:
+                            const EdgeInsets.all(AppSpacing.paddingMedium),
                         decoration: BoxDecoration(
                           color: appColors.surfaceColor.withValues(alpha: 0.5),
                           borderRadius: AppRadius.medium,
-                          border: Border.all(color: appColors.borderColor),
+                          border:
+                              Border.all(color: appColors.borderColor),
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,12 +445,14 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                                       ),
                                     ),
                                   ],
-                                  if (myCompany.contactDetails.isNotEmpty) ...[
+                                  if (myCompany.contactDetails
+                                      .isNotEmpty) ...[
                                     const SizedBox(height: 4),
                                     Text(
                                       myCompany.contactDetails,
                                       style: TextStyle(
-                                        color: appColors.textSecondaryColor.withValues(alpha: 0.8),
+                                        color: appColors.textSecondaryColor
+                                            .withValues(alpha: 0.8),
                                         fontSize: 12,
                                       ),
                                     ),
@@ -275,21 +470,25 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
               ),
               const SizedBox(height: AppSpacing.spacingM),
 
-              // Saved Customer Profiles Dropdown Selector
-              Consumer<CustomerProvider>(
-                builder: (context, provider, child) {
-                  final customers = provider.customers;
+              // Customer Selector
+              Consumer2<CustomerProvider, CreateInvoiceProvider>(
+                builder: (context, customerProvider, draft, _) {
+                  final customers = customerProvider.customers;
                   if (customers.isEmpty) {
                     return Container(
-                      padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+                      padding:
+                          const EdgeInsets.all(AppSpacing.paddingMedium),
                       decoration: BoxDecoration(
                         color: appColors.surfaceColor,
                         borderRadius: AppRadius.medium,
-                        border: Border.all(color: appColors.redColor.withValues(alpha: 0.5)),
+                        border: Border.all(
+                            color:
+                                appColors.redColor.withValues(alpha: 0.5)),
                       ),
                       child: Column(
                         children: [
-                          Icon(Icons.warning_amber_rounded, color: appColors.redColor, size: 36),
+                          Icon(Icons.warning_amber_rounded,
+                              color: appColors.redColor, size: 36),
                           const SizedBox(height: AppSpacing.spacingS),
                           Text(
                             'No Customer Profile Found',
@@ -301,7 +500,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                           ),
                           const SizedBox(height: AppSpacing.spacingXS),
                           Text(
-                            'You must create a customer profile in settings before creating an invoice.',
+                            'You must create a customer profile before creating an invoice.',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: appColors.textSecondaryColor,
@@ -315,18 +514,19 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: appColors.primaryColor,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: AppRadius.medium,
-                                ),
+                                    borderRadius: AppRadius.medium),
                               ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const CustomerListScreen()),
-                                );
-                              },
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        const CustomerListScreen()),
+                              ),
                               child: const Text(
                                 'Manage Customer Profiles',
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -335,11 +535,10 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                     );
                   }
 
-                  if (customers.length == 1 && _selectedCustomer == null) {
+                  if (customers.length == 1 &&
+                      draft.selectedCustomer == null) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      setState(() {
-                        _selectedCustomer = customers.first;
-                      });
+                      draft.setCustomer(customers.first);
                     });
                   }
 
@@ -356,44 +555,42 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                       ),
                       const SizedBox(height: AppSpacing.spacingS),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.paddingMedium),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.paddingMedium),
                         decoration: BoxDecoration(
                           color: appColors.surfaceColor,
                           borderRadius: AppRadius.medium,
                           border: Border.all(
-                            color: _selectedCustomer == null ? appColors.redColor.withValues(alpha: 0.5) : appColors.borderColor,
+                            color: draft.selectedCustomer == null
+                                ? appColors.redColor.withValues(alpha: 0.5)
+                                : appColors.borderColor,
                           ),
                         ),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<CustomerModel>(
-                            value: _selectedCustomer,
+                            value: draft.selectedCustomer,
                             hint: Text(
                               'Choose a customer...',
                               style: TextStyle(
-                                color: appColors.textSecondaryColor.withValues(alpha: 0.5),
+                                color: appColors.textSecondaryColor
+                                    .withValues(alpha: 0.5),
                                 fontSize: 14,
                               ),
                             ),
                             dropdownColor: appColors.surfaceColor,
-                            icon: Icon(Icons.arrow_drop_down, color: appColors.textColor),
+                            icon: Icon(Icons.arrow_drop_down,
+                                color: appColors.textColor),
                             isExpanded: true,
-                            items: customers.map((customer) {
-                              return DropdownMenuItem<CustomerModel>(
-                                value: customer,
-                                child: Text(
-                                  customer.name,
-                                  style: TextStyle(
-                                    color: appColors.textColor,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (CustomerModel? value) {
-                              setState(() {
-                                _selectedCustomer = value;
-                              });
-                            },
+                            items: customers
+                                .map((c) => DropdownMenuItem<CustomerModel>(
+                                      value: c,
+                                      child: Text(c.name,
+                                          style: TextStyle(
+                                              color: appColors.textColor,
+                                              fontSize: 14)),
+                                    ))
+                                .toList(),
+                            onChanged: (val) => draft.setCustomer(val),
                           ),
                         ),
                       ),
@@ -403,20 +600,20 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                         children: [
                           TextButton.icon(
                             onPressed: () async {
-                              final result = await Navigator.push<CustomerModel>(
+                              final result =
+                                  await Navigator.push<CustomerModel>(
                                 context,
-                                MaterialPageRoute(builder: (_) => const AddEditCustomerScreen()),
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        const AddEditCustomerScreen()),
                               );
-
                               if (result != null && context.mounted) {
-                                final customerProvider = Provider.of<CustomerProvider>(context, listen: false);
                                 await customerProvider.addCustomer(result);
-                                setState(() {
-                                  _selectedCustomer = result;
-                                });
+                                draft.setCustomer(result);
                               }
                             },
-                            icon: Icon(Icons.add, color: appColors.primaryColor, size: 16),
+                            icon: Icon(Icons.add,
+                                color: appColors.primaryColor, size: 16),
                             label: Text(
                               'Add Customer',
                               style: TextStyle(
@@ -428,15 +625,17 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                           ),
                         ],
                       ),
-                      if (_selectedCustomer != null) ...[
+                      if (draft.selectedCustomer != null) ...[
                         const SizedBox(height: AppSpacing.spacingM),
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+                          padding:
+                              const EdgeInsets.all(AppSpacing.paddingMedium),
                           decoration: BoxDecoration(
                             color: appColors.surfaceColor.withValues(alpha: 0.5),
                             borderRadius: AppRadius.medium,
-                            border: Border.all(color: appColors.borderColor),
+                            border:
+                                Border.all(color: appColors.borderColor),
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -445,8 +644,13 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                                 radius: 20,
                                 backgroundColor: appColors.secondaryColor,
                                 child: Text(
-                                  _selectedCustomer!.name.trim().isNotEmpty
-                                      ? _selectedCustomer!.name.trim().substring(0, 1).toUpperCase()
+                                  draft.selectedCustomer!.name
+                                          .trim()
+                                          .isNotEmpty
+                                      ? draft.selectedCustomer!.name
+                                          .trim()
+                                          .substring(0, 1)
+                                          .toUpperCase()
                                       : '?',
                                   style: TextStyle(
                                     color: appColors.textColor,
@@ -457,43 +661,37 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                               const SizedBox(width: AppSpacing.spacingM),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      _selectedCustomer!.name,
+                                      draft.selectedCustomer!.name,
                                       style: TextStyle(
                                         color: appColors.textColor,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15,
                                       ),
                                     ),
-                                    if (_selectedCustomer!.email.isNotEmpty) ...[
+                                    if (draft.selectedCustomer!.email
+                                        .isNotEmpty) ...[
                                       const SizedBox(height: 4),
                                       Text(
-                                        _selectedCustomer!.email,
+                                        draft.selectedCustomer!.email,
                                         style: TextStyle(
                                           color: appColors.textSecondaryColor,
                                           fontSize: 13,
                                         ),
                                       ),
                                     ],
-                                    if (_selectedCustomer!.phone.isNotEmpty) ...[
+                                    if (draft.selectedCustomer!.phone
+                                        .isNotEmpty) ...[
                                       const SizedBox(height: 2),
                                       Text(
-                                        _selectedCustomer!.phone,
+                                        draft.selectedCustomer!.phone,
                                         style: TextStyle(
-                                          color: appColors.textSecondaryColor.withValues(alpha: 0.8),
+                                          color: appColors.textSecondaryColor
+                                              .withValues(alpha: 0.8),
                                           fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                    if (_selectedCustomer!.address.isNotEmpty) ...[
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        _selectedCustomer!.address,
-                                        style: TextStyle(
-                                          color: appColors.textSecondaryColor.withValues(alpha: 0.6),
-                                          fontSize: 11,
                                         ),
                                       ),
                                     ],
@@ -511,55 +709,53 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
               ),
               const SizedBox(height: AppSpacing.spacingM),
 
-              // Items Section Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Items',
-                    style: TextStyle(
-                      color: appColors.textColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+              // Items Section
+              Consumer<CreateInvoiceProvider>(
+                builder: (context, draft, _) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Items',
+                          style: TextStyle(
+                            color: appColors.textColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextButton.icon(
+                          onPressed: () => draft.addItem(),
+                          icon: Icon(Icons.add,
+                              color: appColors.primaryColor, size: 18),
+                          label: Text(
+                            'Add Item',
+                            style: TextStyle(
+                              color: appColors.primaryColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  TextButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        _items.add(_HomeScreenItem());
-                      });
-                    },
-                    icon: Icon(Icons.add, color: appColors.primaryColor, size: 18),
-                    label: Text(
-                      'Add Item',
-                      style: TextStyle(
-                        color: appColors.primaryColor,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    const SizedBox(height: AppSpacing.spacingS),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: draft.items.length,
+                      itemBuilder: (context, index) {
+                        return ItemCard(
+                          key: ValueKey(draft.items[index].id),
+                          index: index,
+                          onRemove: draft.items.length > 1
+                              ? () => draft.removeItem(index)
+                              : null,
+                        );
+                      },
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.spacingS),
-
-              // Item Cards List
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _items.length,
-                itemBuilder: (context, index) {
-                  return ItemCard(
-                    key: _items[index].key,
-                    index: index,
-                    onRemove: _items.length > 1
-                        ? () {
-                            setState(() {
-                              _items.removeAt(index);
-                            });
-                          }
-                        : null,
-                  );
-                },
+                  ],
+                ),
               ),
               const SizedBox(height: AppSpacing.spacingM),
 
@@ -569,7 +765,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
               const TemplatePicker(),
               const SizedBox(height: AppSpacing.spacingXL),
 
-              // Action Buttons
+              // Save Button
               SizedBox(
                 width: double.infinity,
                 height: AppSpacing.buttonHeight,
@@ -581,43 +777,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                     ),
                     elevation: 0,
                   ),
-                  onPressed: () {
-                    final companyProvider = Provider.of<CompanyProvider>(context, listen: false);
-                    if (companyProvider.companies.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please create your company profile first.')),
-                      );
-                      return;
-                    }
-
-                    if (_selectedCustomer == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please select a customer profile first.')),
-                      );
-                      return;
-                    }
-
-                    final now = DateTime.now();
-                    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                    final dateStr = '${months[now.month - 1]} ${now.day}, ${now.year}';
-
-                    final newInvoice = InvoiceModel(
-                      id: UniqueKey().toString(),
-                      invoiceNumber: 'INV-${now.year}-${1000 + (now.microsecond % 9000)}',
-                      clientName: _selectedCustomer!.name,
-                      status: 'Pending',
-                      amount: '\$1,500.00', // Simulated total amount
-                      date: dateStr,
-                    );
-
-                    Provider.of<InvoiceProvider>(context, listen: false).addInvoice(newInvoice);
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Invoice ${newInvoice.invoiceNumber} created successfully!')),
-                    );
-
-                    Navigator.of(context).pop();
-                  },
+                  onPressed: () => _saveInvoice(context),
                   child: const Text(
                     'Save Invoice',
                     style: TextStyle(
@@ -629,6 +789,8 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                 ),
               ),
               const SizedBox(height: AppSpacing.spacingM),
+
+              // Export PDF stub
               SizedBox(
                 width: double.infinity,
                 height: AppSpacing.buttonHeight,
@@ -640,7 +802,17 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                       borderRadius: AppRadius.medium,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('PDF export coming soon'),
+                        backgroundColor: appColors.primaryColor,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: AppRadius.medium),
+                      ),
+                    );
+                  },
                   child: Text(
                     'Export PDF',
                     style: TextStyle(

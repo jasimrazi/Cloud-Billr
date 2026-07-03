@@ -1,88 +1,72 @@
+import 'package:cloud_billr/controllers/create_invoice_provider.dart';
 import 'package:cloud_billr/main.dart';
 import 'package:cloud_billr/utils/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class TotalsSection extends StatelessWidget {
   const TotalsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.paddingMedium),
-      decoration: BoxDecoration(
-        color: appColors.surfaceColor,
-        borderRadius: AppRadius.medium,
-        border: Border.all(color: appColors.borderColor),
-      ),
-      child: Column(
-        children: [
-          _buildRow('Subtotal', '\$0.00'),
-          const SizedBox(height: AppSpacing.spacingM),
-          _buildRow('Tax Amount', '\$0.00'),
-          const SizedBox(height: AppSpacing.spacingM),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Consumer<CreateInvoiceProvider>(
+      builder: (context, provider, _) {
+        final symbol = provider.currencySymbol;
+        final subtotal = provider.subtotal;
+        final taxAmt = provider.taxAmount;
+        final grand = provider.grandTotal;
+
+        return Container(
+          padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+          decoration: BoxDecoration(
+            color: appColors.surfaceColor,
+            borderRadius: AppRadius.medium,
+            border: Border.all(color: appColors.borderColor),
+          ),
+          child: Column(
             children: [
-              Text(
-                'Discount',
-                style: TextStyle(
-                  color: appColors.textSecondaryColor,
-                  fontSize: 14,
+              _buildRow('Subtotal', '$symbol${subtotal.toStringAsFixed(2)}'),
+              if (provider.taxEnabled) ...[
+                const SizedBox(height: AppSpacing.spacingM),
+                _buildRow(
+                  '${provider.taxLabel} (${provider.taxRate.toStringAsFixed(0)}%)'
+                  '${provider.taxIsInclusive ? ' – incl.' : ''}',
+                  '$symbol${taxAmt.toStringAsFixed(2)}',
                 ),
-              ),
-              Container(
-                width: 80,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: appColors.backgroundColor,
-                  borderRadius: AppRadius.medium,
-                  border: Border.all(color: appColors.borderColor),
-                ),
-                child: TextField(
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(
-                    color: appColors.textColor,
-                    fontSize: 14,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: '0',
-                    hintStyle: TextStyle(
-                      color: appColors.textSecondaryColor.withValues(alpha: 0.5),
+              ],
+              if (provider.discountEnabled) ...[
+                const SizedBox(height: AppSpacing.spacingM),
+                _buildDiscountRow(context, provider, symbol),
+              ],
+              const SizedBox(height: AppSpacing.spacingM),
+              Divider(color: appColors.borderColor, thickness: 1),
+              const SizedBox(height: AppSpacing.spacingM),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Total Amount',
+                    style: TextStyle(
+                      color: appColors.textColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
-                    contentPadding: EdgeInsets.zero,
-                    border: InputBorder.none,
                   ),
-                ),
+                  Text(
+                    '$symbol${grand.toStringAsFixed(2)}',
+                    style: TextStyle(
+                      color: appColors.primaryColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.spacingM),
-          Divider(color: appColors.borderColor, thickness: 1),
-          const SizedBox(height: AppSpacing.spacingM),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Total Amount',
-                style: TextStyle(
-                  color: appColors.textColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                '\$0.00',
-                style: TextStyle(
-                  color: appColors.textColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -92,18 +76,77 @@ class TotalsSection extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
-            color: appColors.textSecondaryColor,
-            fontSize: 14,
-          ),
+          style: TextStyle(color: appColors.textSecondaryColor, fontSize: 14),
         ),
         Text(
           value,
           style: TextStyle(
-            color: appColors.textColor,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
+              color: appColors.textColor,
+              fontSize: 14,
+              fontWeight: FontWeight.w500),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDiscountRow(
+    BuildContext context,
+    CreateInvoiceProvider provider,
+    String symbol,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          provider.discountType == 'percentage'
+              ? 'Discount (%)'
+              : 'Discount ($symbol)',
+          style: TextStyle(color: appColors.textSecondaryColor, fontSize: 14),
+        ),
+        Row(
+          children: [
+            Text(
+              '- $symbol${provider.discountAmount.toStringAsFixed(2)}',
+              style: TextStyle(
+                color: appColors.redColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(width: 8),
+            SizedBox(
+              width: 72,
+              height: 32,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: appColors.backgroundColor,
+                  borderRadius: AppRadius.medium,
+                  border: Border.all(color: appColors.borderColor),
+                ),
+                child: TextField(
+                  textAlign: TextAlign.center,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                  ],
+                  style: TextStyle(color: appColors.textColor, fontSize: 13),
+                  decoration: InputDecoration(
+                    hintText: '0',
+                    hintStyle: TextStyle(
+                      color: appColors.textSecondaryColor.withValues(alpha: 0.5),
+                    ),
+                    contentPadding: EdgeInsets.zero,
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (val) {
+                    final v = double.tryParse(val) ?? 0;
+                    provider.setDiscount(v);
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );

@@ -101,6 +101,16 @@ class DatabaseHelper {
     return await db.delete('invoices', where: 'id = ?', whereArgs: [id]);
   }
 
+  Future<int> updateInvoiceStatus(String id, String status) async {
+    final db = await instance.database;
+    return await db.update(
+      'invoices',
+      {'status': status},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
   Future<void> close() async {
     final db = _database;
     if (db != null) {
