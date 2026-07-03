@@ -1,95 +1,124 @@
 import 'package:cloud_billr/main.dart';
+import 'package:cloud_billr/models/invoice_model.dart';
 import 'package:cloud_billr/utils/theme.dart';
+import 'package:cloud_billr/views/invoices/invoice_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class PastInvoiceCard extends StatelessWidget {
-  final String title;
-  final String clientName;
-  final String date;
-  final String amount;
-  final VoidCallback? onPdfTap;
+  final InvoiceModel invoice;
 
-  const PastInvoiceCard({
-    super.key,
-    required this.title,
-    required this.clientName,
-    required this.date,
-    required this.amount,
-    this.onPdfTap,
-  });
+  const PastInvoiceCard({super.key, required this.invoice});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.paddingMedium),
-      margin: const EdgeInsets.only(bottom: AppSpacing.marginMedium),
-      decoration: BoxDecoration(
-        color: appColors.backgroundColor,
-        borderRadius: AppRadius.medium,
-        border: Border.all(color: appColors.borderColor),
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => InvoiceDetailScreen(invoice: invoice),
+        ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+        margin: const EdgeInsets.only(bottom: AppSpacing.marginMedium),
+        decoration: BoxDecoration(
+          color: appColors.backgroundColor,
+          borderRadius: AppRadius.medium,
+          border: Border.all(color: appColors.borderColor),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    invoice.invoiceNumber,
+                    style: TextStyle(
+                      color: appColors.textColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    invoice.clientName,
+                    style: TextStyle(
+                      color: appColors.textSecondaryColor,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    invoice.date,
+                    style: TextStyle(
+                      color:
+                          appColors.textSecondaryColor.withValues(alpha: 0.7),
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  title,
+                  invoice.amount,
                   style: TextStyle(
                     color: appColors.textColor,
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 15,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  clientName,
-                  style: TextStyle(
-                    color: appColors.textSecondaryColor,
-                    fontSize: 14,
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: _statusBgColor(invoice.status.toLowerCase()),
+                    borderRadius: AppRadius.circle,
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  date,
-                  style: TextStyle(
-                    color: appColors.textSecondaryColor.withValues(alpha: 0.7),
-                    fontSize: 12,
+                  child: Text(
+                    invoice.status,
+                    style: TextStyle(
+                      color: _statusTextColor(invoice.status.toLowerCase()),
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                amount,
-                style: TextStyle(
-                  color: appColors.textColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.spacingS),
-              GestureDetector(
-                onTap: onPdfTap,
-                child: CircleAvatar(
-                  radius: 18,
-                  backgroundColor: appColors.primaryBlueColor.withValues(alpha: 0.5),
-                  child: Icon(
-                    Icons.description_outlined,
-                    size: 18,
-                    color: appColors.primaryColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  Color _statusBgColor(String status) {
+    switch (status) {
+      case 'pending':
+        return appColors.pendingYellowBgColor;
+      case 'paid':
+        return appColors.successGreenBgColor;
+      case 'overdue':
+        return const Color(0xFFFFE4E6);
+      default:
+        return appColors.borderColor;
+    }
+  }
+
+  Color _statusTextColor(String status) {
+    switch (status) {
+      case 'pending':
+        return appColors.pendingYellowColor;
+      case 'paid':
+        return appColors.successGreenColor;
+      case 'overdue':
+        return const Color(0xFFDC2626);
+      default:
+        return appColors.textColor;
+    }
   }
 }

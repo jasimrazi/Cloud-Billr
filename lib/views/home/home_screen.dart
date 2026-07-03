@@ -1,4 +1,5 @@
 
+import 'package:cloud_billr/controllers/invoice_config_provider.dart';
 import 'package:cloud_billr/controllers/invoice_provider.dart';
 import 'package:cloud_billr/main.dart';
 import 'package:cloud_billr/utils/theme.dart';
@@ -187,66 +188,73 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               SizedBox(height: AppSpacing.spacingS),
-              Container(
-                padding: const EdgeInsets.all(AppSpacing.paddingMedium),
-                decoration: BoxDecoration(
-                  borderRadius: AppRadius.medium,
-                  boxShadow: [
-                    BoxShadow(
-                      offset: const Offset(0, 1),
-                      blurRadius: 2,
-                      color: appColors.shadowColor,
-                      blurStyle: BlurStyle.outer,
-                    )
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "This Month's Revenue",
-                          style: TextStyle(
-                            color: appColors.textSecondaryColor,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                          ),
-                        ),
-                        Text(
-                          '\$12,500.00',
-                          style: TextStyle(
-                            color: appColors.textColor,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 20,
-                          ),
+              Consumer2<InvoiceProvider, InvoiceConfigProvider>(
+                builder: (context, invoiceProvider, configProvider, _) {
+                  final symbol = configProvider.config.currencySymbol;
+                  final revenue = invoiceProvider.totalRevenue;
+                  final pending = invoiceProvider.pendingAmount;
+                  return Container(
+                    padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+                    decoration: BoxDecoration(
+                      borderRadius: AppRadius.medium,
+                      boxShadow: [
+                        BoxShadow(
+                          offset: const Offset(0, 1),
+                          blurRadius: 2,
+                          color: appColors.shadowColor,
+                          blurStyle: BlurStyle.outer,
                         ),
                       ],
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Pending Invoices',
-                          style: TextStyle(
-                            color: appColors.textSecondaryColor,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "This Month's Revenue",
+                              style: TextStyle(
+                                color: appColors.textSecondaryColor,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(
+                              '$symbol${revenue.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                color: appColors.textColor,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          '\$3,200.00',
-                          style: TextStyle(
-                            color: appColors.textColor,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 20,
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Pending Invoices',
+                              style: TextStyle(
+                                color: appColors.textSecondaryColor,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(
+                              '$symbol${pending.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                color: appColors.textColor,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
               SizedBox(height: AppSpacing.spacingL),
               Divider(

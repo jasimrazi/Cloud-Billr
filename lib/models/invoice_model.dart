@@ -5,6 +5,7 @@ class InvoiceModel {
   final String status;
   final String amount;
   final String date;
+  final double totalAmount;
 
   InvoiceModel({
     required this.id,
@@ -13,6 +14,7 @@ class InvoiceModel {
     required this.status,
     required this.amount,
     required this.date,
+    this.totalAmount = 0.0,
   });
 
   InvoiceModel copyWith({
@@ -22,6 +24,7 @@ class InvoiceModel {
     String? status,
     String? amount,
     String? date,
+    double? totalAmount,
   }) {
     return InvoiceModel(
       id: id ?? this.id,
@@ -30,6 +33,7 @@ class InvoiceModel {
       status: status ?? this.status,
       amount: amount ?? this.amount,
       date: date ?? this.date,
+      totalAmount: totalAmount ?? this.totalAmount,
     );
   }
 
@@ -41,6 +45,7 @@ class InvoiceModel {
       'status': status,
       'amount': amount,
       'date': date,
+      'total_amount': totalAmount,
     };
   }
 
@@ -52,6 +57,7 @@ class InvoiceModel {
       status: json['status'] ?? '',
       amount: json['amount'] ?? '',
       date: json['date'] ?? '',
+      totalAmount: (json['total_amount'] ?? 0.0).toDouble(),
     );
   }
 }
