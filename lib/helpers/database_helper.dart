@@ -107,4 +107,19 @@ class DatabaseHelper {
       await db.close();
     }
   }
+
+  // --- CRUD HELPERS FOR INVOICE TEMPLATE CONFIG ---
+
+  Future<int> insertOrReplaceConfig(Map<String, dynamic> row) async {
+    final db = await instance.database;
+    return await db.insert('invoice_template_configs', row,
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<Map<String, dynamic>?> queryConfig() async {
+    final db = await instance.database;
+    final results = await db.query('invoice_template_configs', limit: 1);
+    return results.isNotEmpty ? results.first : null;
+  }
 }
+

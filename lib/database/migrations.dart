@@ -3,6 +3,7 @@ import 'package:cloud_billr/database/migrations/migration_v2.dart';
 import 'package:cloud_billr/database/migrations/migration_v3.dart';
 import 'package:cloud_billr/database/migrations/migration_v4.dart';
 import 'package:cloud_billr/database/migrations/migration_v5.dart';
+import 'package:cloud_billr/database/migrations/migration_v6.dart';
 
 /// A list of SQL migration statements that need to be run when the app is installed
 /// or upgraded. Each migration is defined in its own file under the database/migrations/ folder.
@@ -12,4 +13,5 @@ const List<String> databaseMigrations = [
   migrationV3,
   migrationV4,
   migrationV5,
+  migrationV6,
 ];
