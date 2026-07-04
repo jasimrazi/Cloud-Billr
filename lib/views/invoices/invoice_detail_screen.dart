@@ -1,6 +1,11 @@
 import 'package:cloud_billr/controllers/invoice_provider.dart';
+import 'package:cloud_billr/controllers/company_provider.dart';
+import 'package:cloud_billr/controllers/customer_provider.dart';
+import 'package:cloud_billr/controllers/invoice_config_provider.dart';
+import 'package:cloud_billr/helpers/pdf_helper.dart';
 import 'package:cloud_billr/main.dart';
 import 'package:cloud_billr/models/invoice_model.dart';
+import 'package:cloud_billr/models/customer_model.dart';
 import 'package:cloud_billr/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -329,6 +334,57 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
             ),
             const SizedBox(height: AppSpacing.spacingM),
 
+            if (_invoice.items.isNotEmpty) ...[
+              _SectionLabel(label: 'Items'),
+              _Card(
+                child: Column(
+                  children: _invoice.items.map((item) {
+                    final symbol = Provider.of<InvoiceConfigProvider>(context, listen: false).config.currencySymbol;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.name,
+                                  style: TextStyle(
+                                    color: appColors.textColor,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Qty: ${item.quantity} × $symbol${item.rate.toStringAsFixed(2)}',
+                                  style: TextStyle(
+                                    color: appColors.textSecondaryColor,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            '$symbol${item.lineTotal.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              color: appColors.textColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.spacingM),
+            ],
+
             // ── Totals ───────────────────────────────────────────────
             _SectionLabel(label: 'Totals'),
             _Card(
@@ -388,14 +444,25 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                     ),
                   ),
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('PDF export coming soon'),
-                        backgroundColor: appColors.primaryColor,
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: AppRadius.medium),
-                      ),
+                    final companyProvider = Provider.of<CompanyProvider>(context, listen: false);
+                    final customerProvider = Provider.of<CustomerProvider>(context, listen: false);
+                    final configProvider = Provider.of<InvoiceConfigProvider>(context, listen: false);
+
+                    final company = companyProvider.companies.isNotEmpty ? companyProvider.companies.first : null;
+                    final client = customerProvider.customers.firstWhere(
+                      (c) => c.name.toLowerCase() == _invoice.clientName.toLowerCase(),
+                      orElse: () => CustomerModel(id: '', name: _invoice.clientName, address: '', email: '', phone: ''),
+                    );
+
+                    PdfHelper.exportPdf(
+                      context: context,
+                      invoice: _invoice,
+                      companyName: company?.name,
+                      companyAddress: company?.address,
+                      companyContact: company?.contactDetails,
+                      clientAddress: client.address,
+                      clientEmail: client.email,
+                      currencySymbol: configProvider.config.currencySymbol,
                     );
                   },
                 ),

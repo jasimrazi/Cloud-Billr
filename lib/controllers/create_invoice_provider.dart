@@ -25,6 +25,7 @@ class CreateInvoiceProvider extends ChangeNotifier {
   CustomerModel? _selectedCustomer;
   double _discountValue = 0;
   String _invoiceNumber = '';
+  int _selectedTemplateIndex = 0;
 
   // Tax settings (populated from InvoiceConfigProvider before use)
   bool taxEnabled = false;
@@ -34,11 +35,13 @@ class CreateInvoiceProvider extends ChangeNotifier {
   bool discountEnabled = false;
   String discountType = 'percentage';
   String currencySymbol = '\$';
+  int _defaultTemplateIndex = 0;
 
   List<InvoiceItemDraft> get items => List.unmodifiable(_items);
   CustomerModel? get selectedCustomer => _selectedCustomer;
   double get discountValue => _discountValue;
   String get invoiceNumber => _invoiceNumber;
+  int get selectedTemplateIndex => _selectedTemplateIndex;
 
   double get subtotal =>
       _items.fold(0.0, (sum, item) => sum + item.lineTotal);
@@ -77,6 +80,7 @@ class CreateInvoiceProvider extends ChangeNotifier {
     required bool discountEnabled,
     required String discountType,
     required String currencySymbol,
+    required int defaultTemplateIndex,
   }) {
     this.taxEnabled = taxEnabled;
     this.taxLabel = taxLabel;
@@ -85,6 +89,13 @@ class CreateInvoiceProvider extends ChangeNotifier {
     this.discountEnabled = discountEnabled;
     this.discountType = discountType;
     this.currencySymbol = currencySymbol;
+    _defaultTemplateIndex = defaultTemplateIndex;
+    _selectedTemplateIndex = defaultTemplateIndex;
+    notifyListeners();
+  }
+
+  void setSelectedTemplateIndex(int index) {
+    _selectedTemplateIndex = index;
     notifyListeners();
   }
 
@@ -128,6 +139,7 @@ class CreateInvoiceProvider extends ChangeNotifier {
     _selectedCustomer = null;
     _discountValue = 0;
     _invoiceNumber = '';
+    _selectedTemplateIndex = _defaultTemplateIndex;
     notifyListeners();
   }
 }
