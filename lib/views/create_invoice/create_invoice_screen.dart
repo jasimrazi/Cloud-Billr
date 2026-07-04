@@ -33,8 +33,10 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_configApplied) {
-      _applyConfig();
       _configApplied = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _applyConfig();
+      });
     }
   }
 
