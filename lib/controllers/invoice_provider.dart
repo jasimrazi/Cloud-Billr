@@ -28,7 +28,12 @@ class InvoiceProvider extends ChangeNotifier {
     try {
       final data = await DatabaseHelper.instance.queryAllInvoices();
       _invoices.clear();
-      _invoices.addAll(data.map((map) => InvoiceModel.fromMap(map)));
+      for (var map in data) {
+        final invoice = InvoiceModel.fromMap(map);
+        final itemMaps = await DatabaseHelper.instance.queryInvoiceItems(invoice.id);
+        final items = itemMaps.map((m) => InvoiceItemModel.fromMap(m)).toList();
+        _invoices.add(invoice.copyWith(items: items));
+      }
       notifyListeners();
     } catch (e) {
       debugPrint('Error loading invoices: $e');
@@ -48,6 +53,11 @@ class InvoiceProvider extends ChangeNotifier {
             amount: '\$2,500.00',
             date: 'Jan 15, 2025',
             totalAmount: 2500.0,
+            templateIndex: 0,
+            items: [
+              InvoiceItemModel(id: 'item1_1', name: 'Web Development Services', quantity: 1, rate: 2000.0, tax: 0),
+              InvoiceItemModel(id: 'item1_2', name: 'Cloud Hosting setup', quantity: 1, rate: 500.0, tax: 0),
+            ],
           ),
           InvoiceModel(
             id: '2',
@@ -57,6 +67,10 @@ class InvoiceProvider extends ChangeNotifier {
             amount: '\$1,800.00',
             date: 'Jan 14, 2024',
             totalAmount: 1800.0,
+            templateIndex: 1,
+            items: [
+              InvoiceItemModel(id: 'item2_1', name: 'UI/UX Mobile Design', quantity: 12, rate: 150.0, tax: 0),
+            ],
           ),
           InvoiceModel(
             id: '3',
@@ -66,11 +80,18 @@ class InvoiceProvider extends ChangeNotifier {
             amount: '\$3,200.00',
             date: 'Jan 13, 2024',
             totalAmount: 3200.0,
+            templateIndex: 3,
+            items: [
+              InvoiceItemModel(id: 'item3_1', name: 'Social Media Management', quantity: 2, rate: 1600.0, tax: 0),
+            ],
           ),
         ];
 
         for (var invoice in defaults) {
           await DatabaseHelper.instance.insertInvoice(invoice.toMap());
+          for (var item in invoice.items) {
+            await DatabaseHelper.instance.insertInvoiceItem(item.toMap(invoice.id));
+          }
         }
       }
     } catch (e) {
@@ -81,6 +102,11 @@ class InvoiceProvider extends ChangeNotifier {
   Future<void> addInvoice(InvoiceModel invoice) async {
     try {
       await DatabaseHelper.instance.insertInvoice(invoice.toMap());
+      // Delete any existing items for this invoice ID (in case of conflict replace)
+      await DatabaseHelper.instance.deleteInvoiceItems(invoice.id);
+      for (var item in invoice.items) {
+        await DatabaseHelper.instance.insertInvoiceItem(item.toMap(invoice.id));
+      }
       await loadInvoices();
     } catch (e) {
       debugPrint('Error adding invoice: $e');

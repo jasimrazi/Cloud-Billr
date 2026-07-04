@@ -12,7 +12,8 @@ import 'package:cloud_billr/utils/theme.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/item_card.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/template_picker.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/totals_section.dart';
-import 'package:cloud_billr/views/invoices/invoice_detail_screen.dart';
+import 'package:cloud_billr/helpers/pdf_helper.dart';
+import 'package:cloud_billr/views/invoices/pdf_preview_screen.dart';
 import 'package:cloud_billr/views/settings/add_edit_company_screen.dart';
 import 'package:cloud_billr/views/settings/add_edit_customer_screen.dart';
 import 'package:cloud_billr/views/settings/customer_list_screen.dart';
@@ -56,6 +57,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
       discountEnabled: config.discountEnabled,
       discountType: config.discountType,
       currencySymbol: config.currencySymbol,
+      defaultTemplateIndex: config.defaultTemplateIndex,
     );
 
     if (draftProvider.invoiceNumber.isEmpty) {
@@ -197,6 +199,14 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
       amount: '$symbol${grandTotal.toStringAsFixed(2)}',
       date: dateStr,
       totalAmount: grandTotal,
+      templateIndex: draftProvider.selectedTemplateIndex,
+      items: draftProvider.items.map((e) => InvoiceItemModel(
+        id: e.id,
+        name: e.description.isNotEmpty ? e.description : 'Item Details',
+        quantity: e.quantity.toInt(),
+        rate: e.rate,
+        tax: 0.0,
+      )).toList(),
     );
 
     await invoiceProvider.addInvoice(newInvoice);
@@ -270,13 +280,29 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                   date:
                       '${months[now.month - 1]} ${now.day}, ${now.year}',
                   totalAmount: draft.grandTotal,
+                  templateIndex: draft.selectedTemplateIndex,
+                  items: draft.items.map((e) => InvoiceItemModel(
+                    id: e.id,
+                    name: e.description.isNotEmpty ? e.description : 'Item Details',
+                    quantity: e.quantity.toInt(),
+                    rate: e.rate,
+                    tax: 0.0,
+                  )).toList(),
                 );
+                final companyProvider = Provider.of<CompanyProvider>(context, listen: false);
+                final company = companyProvider.companies.isNotEmpty ? companyProvider.companies.first : null;
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => InvoiceDetailScreen(
+                    builder: (_) => PdfPreviewScreen(
                       invoice: preview,
-                      previewMode: true,
+                      companyName: company?.name ?? 'My Company',
+                      companyAddress: company?.address ?? '',
+                      companyContact: company?.contactDetails ?? '',
+                      clientAddress: customer.address,
+                      clientEmail: customer.email,
+                      currencySymbol: symbol,
                     ),
                   ),
                 );
@@ -805,14 +831,63 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                     ),
                   ),
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('PDF export coming soon'),
-                        backgroundColor: appColors.primaryColor,
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: AppRadius.medium),
-                      ),
+                    final companyProvider = Provider.of<CompanyProvider>(context, listen: false);
+                    final draftProvider = Provider.of<CreateInvoiceProvider>(context, listen: false);
+
+                    if (companyProvider.companies.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Please create your company profile first.')),
+                      );
+                      return;
+                    }
+
+                    if (draftProvider.selectedCustomer == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Please select a customer profile first.')),
+                      );
+                      return;
+                    }
+
+                    final company = companyProvider.companies.first;
+                    final customer = draftProvider.selectedCustomer!;
+                    final symbol = draftProvider.currencySymbol;
+                    final grandTotal = draftProvider.grandTotal;
+
+                    final now = DateTime.now();
+                    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    final dateStr = '${months[now.month - 1]} ${now.day}, ${now.year}';
+
+                    final invoiceNumber = draftProvider.invoiceNumber.isNotEmpty
+                        ? draftProvider.invoiceNumber
+                        : 'DRAFT';
+
+                    final tempInvoice = InvoiceModel(
+                      id: 'draft',
+                      invoiceNumber: invoiceNumber,
+                      clientName: customer.name,
+                      status: 'Draft',
+                      amount: '$symbol${grandTotal.toStringAsFixed(2)}',
+                      date: dateStr,
+                      totalAmount: grandTotal,
+                      templateIndex: draftProvider.selectedTemplateIndex,
+                      items: draftProvider.items.map((e) => InvoiceItemModel(
+                        id: e.id,
+                        name: e.description.isNotEmpty ? e.description : 'Item Details',
+                        quantity: e.quantity.toInt(),
+                        rate: e.rate,
+                        tax: 0.0,
+                      )).toList(),
+                    );
+
+                    PdfHelper.exportPdf(
+                      context: context,
+                      invoice: tempInvoice,
+                      companyName: company.name,
+                      companyAddress: company.address,
+                      companyContact: company.contactDetails,
+                      clientAddress: customer.address,
+                      clientEmail: customer.email,
+                      currencySymbol: symbol,
                     );
                   },
                   child: Text(

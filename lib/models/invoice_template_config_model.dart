@@ -96,6 +96,8 @@ class InvoiceTemplateConfig {
   // Line item columns
   final List<InvoiceColumnConfig> lineItemColumns;
 
+  final int defaultTemplateIndex;
+
   const InvoiceTemplateConfig({
     required this.id,
     required this.invoiceNumberFormat,
@@ -117,6 +119,7 @@ class InvoiceTemplateConfig {
     required this.defaultNotes,
     required this.defaultTerms,
     required this.lineItemColumns,
+    this.defaultTemplateIndex = 0,
   });
 
   static InvoiceTemplateConfig get defaults => InvoiceTemplateConfig(
@@ -139,6 +142,7 @@ class InvoiceTemplateConfig {
         showTermsField: true,
         defaultNotes: '',
         defaultTerms: '',
+        defaultTemplateIndex: 0,
         lineItemColumns: [
           InvoiceColumnConfig(
             id: 'description',
@@ -196,6 +200,7 @@ class InvoiceTemplateConfig {
     String? defaultNotes,
     String? defaultTerms,
     List<InvoiceColumnConfig>? lineItemColumns,
+    int? defaultTemplateIndex,
   }) {
     return InvoiceTemplateConfig(
       id: id ?? this.id,
@@ -218,6 +223,7 @@ class InvoiceTemplateConfig {
       defaultNotes: defaultNotes ?? this.defaultNotes,
       defaultTerms: defaultTerms ?? this.defaultTerms,
       lineItemColumns: lineItemColumns ?? this.lineItemColumns,
+      defaultTemplateIndex: defaultTemplateIndex ?? this.defaultTemplateIndex,
     );
   }
 
@@ -242,6 +248,7 @@ class InvoiceTemplateConfig {
       'show_terms_field': showTermsField ? 1 : 0,
       'default_notes': defaultNotes,
       'default_terms': defaultTerms,
+      'default_template_index': defaultTemplateIndex,
       'line_item_columns':
           jsonEncode(lineItemColumns.map((c) => c.toMap()).toList()),
     };
@@ -280,6 +287,7 @@ class InvoiceTemplateConfig {
       defaultNotes: map['default_notes'] ?? '',
       defaultTerms: map['default_terms'] ?? '',
       lineItemColumns: columns,
+      defaultTemplateIndex: map['default_template_index'] ?? 0,
     );
   }
 }

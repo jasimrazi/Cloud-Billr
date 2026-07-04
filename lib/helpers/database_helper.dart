@@ -111,6 +111,21 @@ class DatabaseHelper {
     );
   }
 
+  Future<int> insertInvoiceItem(Map<String, dynamic> row) async {
+    final db = await instance.database;
+    return await db.insert('invoice_items', row, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<List<Map<String, dynamic>>> queryInvoiceItems(String invoiceId) async {
+    final db = await instance.database;
+    return await db.query('invoice_items', where: 'invoice_id = ?', whereArgs: [invoiceId]);
+  }
+
+  Future<int> deleteInvoiceItems(String invoiceId) async {
+    final db = await instance.database;
+    return await db.delete('invoice_items', where: 'invoice_id = ?', whereArgs: [invoiceId]);
+  }
+
   Future<void> close() async {
     final db = _database;
     if (db != null) {
