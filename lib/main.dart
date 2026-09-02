@@ -40,6 +40,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.light,
+        // scaffoldBackgroundColor: AppColorScheme.light.backgroundColor,
+        // appBarTheme: AppBarTheme(
+        //   backgroundColor: AppColorScheme.light.secondaryColor,
+        //   foregroundColor: AppColorScheme.light.textColor,
+        // ),
         fontFamily: 'Inter',
       ),
       darkTheme: ThemeData(
