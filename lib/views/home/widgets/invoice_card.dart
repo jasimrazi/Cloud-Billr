@@ -18,10 +18,10 @@ class InvoiceCard extends StatelessWidget {
         ),
       ),
       child: Container(
-        padding: const EdgeInsets.all(AppSpacing.paddingMedium),
-        margin: const EdgeInsets.only(bottom: AppSpacing.marginMedium),
+        padding: EdgeInsets.all(AppSpacing.paddingMedium),
+        margin: EdgeInsets.only(bottom: AppSpacing.marginMedium),
         decoration: BoxDecoration(
-          borderRadius: AppRadius.medium,
+          borderRadius: BorderRadius.circular(AppRadius.medium),
           border: Border.all(color: appColors.borderColor),
         ),
         child: Column(
@@ -53,11 +53,11 @@ class InvoiceCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                       horizontal: AppSpacing.paddingSmall, vertical: 3),
                   decoration: BoxDecoration(
                     color: _statusBgColor(invoice.status.toLowerCase()),
-                    borderRadius: AppRadius.medium,
+                    borderRadius: BorderRadius.circular(AppRadius.medium),
                   ),
                   child: Text(
                     invoice.status,
@@ -70,7 +70,7 @@ class InvoiceCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: AppSpacing.spacingS),
+            SizedBox(height: AppSpacing.spacingS),
             Row(
               children: [
                 Expanded(
