@@ -94,7 +94,7 @@ class InvoiceColumnEditor extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.spacingL),
+                SizedBox(height: AppSpacing.spacingL),
                 Text(
                   'Add Column',
                   style: TextStyle(
@@ -103,7 +103,7 @@ class InvoiceColumnEditor extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.spacingM),
+                SizedBox(height: AppSpacing.spacingM),
                 TextField(
                   controller: labelController,
                   autofocus: true,
@@ -113,17 +113,17 @@ class InvoiceColumnEditor extends StatelessWidget {
                     labelStyle:
                         TextStyle(color: appColors.textSecondaryColor),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: AppRadius.medium,
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
                       borderSide: BorderSide(color: appColors.borderColor),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: AppRadius.medium,
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
                       borderSide:
                           BorderSide(color: appColors.primaryColor, width: 2),
                     ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.spacingM),
+                SizedBox(height: AppSpacing.spacingM),
                 Text(
                   'Field Type',
                   style: TextStyle(
@@ -132,7 +132,7 @@ class InvoiceColumnEditor extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.spacingS),
+                SizedBox(height: AppSpacing.spacingS),
                 Row(
                   children: _typeLabels.entries.map((entry) {
                     final isSelected = selectedType == entry.key;
@@ -149,7 +149,7 @@ class InvoiceColumnEditor extends StatelessWidget {
                             color: isSelected
                                 ? appColors.primaryColor
                                 : appColors.borderColor.withValues(alpha: 0.3),
-                            borderRadius: AppRadius.medium,
+                            borderRadius: BorderRadius.circular(AppRadius.medium),
                             border: Border.all(
                               color: isSelected
                                   ? appColors.primaryColor
@@ -184,16 +184,16 @@ class InvoiceColumnEditor extends StatelessWidget {
                     );
                   }).toList(),
                 ),
-                const SizedBox(height: AppSpacing.spacingL),
+                SizedBox(height: AppSpacing.spacingL),
                 SizedBox(
                   width: double.infinity,
-                  height: AppSpacing.buttonHeight,
+                  // height: AppSpacing.buttonHeight,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: appColors.primaryColor,
                       foregroundColor: Colors.white,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: AppRadius.medium),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppRadius.medium)),
                     ),
                     onPressed: () {
                       final label = labelController.text.trim();
@@ -230,7 +230,7 @@ class InvoiceColumnEditor extends StatelessWidget {
         ReorderableListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          onReorderItem: (oldIndex, newIndex) => _onReorder(oldIndex, newIndex),
+          onReorder: (oldIndex, newIndex) => _onReorder(oldIndex, newIndex),
           proxyDecorator: (child, index, animation) {
             return Material(
               color: Colors.transparent,
@@ -248,13 +248,13 @@ class InvoiceColumnEditor extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: AppSpacing.spacingM),
+        SizedBox(height: AppSpacing.spacingM),
         GestureDetector(
           onTap: () => _addColumn(context),
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             decoration: BoxDecoration(
-              borderRadius: AppRadius.medium,
+              borderRadius: BorderRadius.circular(AppRadius.medium),
               border: Border.all(
                 color: appColors.primaryColor.withValues(alpha: 0.5),
                 style: BorderStyle.solid,
@@ -314,7 +314,7 @@ class _ColumnRow extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: appColors.backgroundColor,
-        borderRadius: AppRadius.medium,
+        borderRadius: BorderRadius.circular(AppRadius.medium),
         border: Border.all(color: appColors.borderColor),
       ),
       child: ListTile(

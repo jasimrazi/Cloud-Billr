@@ -16,6 +16,10 @@ class AppColorScheme {
   final Color redColor;
   final Color borderColor;
   final Color shadowColor;
+  final Color cardBackgroundColor;
+  final Color cardTextColor;
+  final Color hintTextColor;
+  final Color labelTextColor;
 
   const AppColorScheme({
     required this.primaryColor,
@@ -33,6 +37,10 @@ class AppColorScheme {
     required this.redColor,
     required this.borderColor,
     required this.shadowColor,
+    required this.cardBackgroundColor,
+    required this.cardTextColor,
+    required this.hintTextColor,
+    required this.labelTextColor
   });
 
   // ✅ Light Scheme
@@ -52,6 +60,10 @@ class AppColorScheme {
     redColor: Color(0xFFE14646),
     borderColor: Color(0xFFF3F4F6),
     shadowColor: Color(0x0D000000),
+    cardBackgroundColor: Color(0xFFF3F4F6),
+    cardTextColor: Color(0xFF4B5563),
+    hintTextColor: Color(0xFF9CA3AF),
+    labelTextColor: Color(0xFF4B5563),
   );
 
   // ✅ Dark Scheme
@@ -71,5 +83,9 @@ class AppColorScheme {
     redColor: Color(0xFFEF5350 ),
     borderColor: Color(0xFF374151),
     shadowColor: Color(0x1AFFFFFF),
+    cardBackgroundColor: Color(0xFF1E1F24),
+    cardTextColor: Color(0xFF9CA3AF),
+    hintTextColor: Color(0xFFD1D5DB),
+    labelTextColor: Color(0xFF9CA3AF)
   );
 }

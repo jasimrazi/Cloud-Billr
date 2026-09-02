@@ -65,7 +65,7 @@ class _AddEditCustomerScreenState extends State<AddEditCustomerScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.mainPadding),
+          padding: EdgeInsets.all(AppSpacing.mainPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -77,42 +77,42 @@ class _AddEditCustomerScreenState extends State<AddEditCustomerScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               LabeledTextField(
                 label: 'Customer Name',
                 hintText: 'e.g. John Doe',
                 controller: _nameController,
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               LabeledTextField(
                 label: 'Email Address',
                 hintText: 'e.g. john@example.com',
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               LabeledTextField(
                 label: 'Phone Number',
                 hintText: 'e.g. +1 (555) 019-2831',
                 keyboardType: TextInputType.phone,
                 controller: _phoneController,
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               LabeledTextField(
                 label: 'Billing Address',
                 hintText: 'Enter billing address',
                 maxLines: 3,
                 controller: _addressController,
               ),
-              const SizedBox(height: AppSpacing.spacingXL),
+              SizedBox(height: AppSpacing.spacingXL),
               SizedBox(
                 width: double.infinity,
-                height: AppSpacing.buttonHeight,
+                // height: AppSpacing.buttonHeight,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: appColors.primaryColor,
                     shape: RoundedRectangleBorder(
-                      borderRadius: AppRadius.medium,
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
                     ),
                     elevation: 0,
                   ),
@@ -133,7 +133,7 @@ class _AddEditCustomerScreenState extends State<AddEditCustomerScreen> {
                       id: isEditing ? widget.customer!.id : UniqueKey().toString(),
                       name: name,
                       email: email,
-                      phone: phone,
+                      phone: phone, 
                       address: address,
                     );
 

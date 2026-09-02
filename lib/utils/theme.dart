@@ -1,45 +1,61 @@
 
 import 'package:flutter/material.dart';
 
+import '../helpers/responsive.dart';
+
 class AppSpacing {
   // Padding
-  static const double paddingSmall = 8.0;
-  static const double paddingMedium = 16.0;
-  static const double paddingLarge = 24.0;
-  static const double mainPadding = 20;
+  static double paddingSmall = Responsive.width(8);
+  static double paddingMedium = Responsive.width(16);
+  static double paddingLarge = Responsive.width(24);
+  static double mainPadding = Responsive.width(20);
+
+  static double textFieldPadding = Responsive.width(12);
 
   // Margin
-  static const double marginSmall = 8.0;
-  static const double marginMedium = 16.0;
-  static const double marginLarge = 24.0;
+  static double marginSmall = Responsive.width(8);
+  static double marginMedium = Responsive.width(16);
+  static double marginLarge = Responsive.width(24);
 
   // Spacing between widgets
-  static const double spacingXS = 4.0;
-  static const double spacingS = 8.0;
-  static const double spacingM = 16.0;
-  static const double spacingL = 24.0;
-  static const double spacingXL = 32.0;
+  static double spacingXS = Responsive.width(4);
+  static double spacingS = Responsive.width(8);
+  static double spacingM = Responsive.width(16);
+  static double spacingL = Responsive.width(20);
+  static double spacingXL = Responsive.width(32);
 
-  // Heights for common widgets
-  static const double buttonHeight = 48.0;
-  static const double textFieldHeight = 56.0;
-  static const double appBarHeight = kToolbarHeight; // Flutter default = 56
+}
+
+class AppHeights{
+
+  static double appBarHeight = Responsive.height(60); 
+  static double appBarIconHeight = Responsive.height(24);
+  static double buttonHeight = Responsive.width(48);
+  static double textFieldHeight = Responsive.width(56);
+}
+
+class AppWidths{
+
+  static double appBarIconWidth = Responsive.width(24);
 }
 
 class AppRadius {
   // Small rounded corners
-  static const BorderRadius small = BorderRadius.all(Radius.circular(4));
-
-  // Medium rounded corners (common for cards, containers)
-  static const BorderRadius medium = BorderRadius.all(Radius.circular(8));
-
-  // Large rounded corners (buttons, modals)
-  static const BorderRadius large = BorderRadius.all(Radius.circular(16));
-
-  // Extra large (bottom sheets, big containers)
-  static const BorderRadius extraLarge = BorderRadius.all(Radius.circular(24));
+  static double small = Responsive.width(4);
+  static double medium = Responsive.width(8);
+  static double large = Responsive.width(16);
+  static double extraLarge = Responsive.width(24);
 
   // Full circle (avatars, chips, round buttons)
-  static const BorderRadius circle = BorderRadius.all(Radius.circular(9999));
+  static BorderRadius circle = BorderRadius.all(Radius.circular(Responsive.width(9999)));
+}
+
+class AppFontsSizes{
+
+  static double fontSizeS = Responsive.font(12);
+  static double fontSizeM = Responsive.font(14);
+  static double fontSizeL = Responsive.font(20);
+
+  static double appBarTitleSize = Responsive.font(18);
 }
 

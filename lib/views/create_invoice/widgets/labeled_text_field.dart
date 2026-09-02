@@ -34,12 +34,12 @@ class LabeledTextField extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: AppSpacing.spacingS),
+          SizedBox(height: AppSpacing.spacingS),
         ],
         Container(
           decoration: BoxDecoration(
             color: appColors.surfaceColor,
-            borderRadius: AppRadius.medium,
+            borderRadius: BorderRadius.circular(AppRadius.medium),
             border: Border.all(color: appColors.borderColor),
           ),
           child: TextField(
@@ -53,7 +53,7 @@ class LabeledTextField extends StatelessWidget {
                 color: appColors.textSecondaryColor.withValues(alpha: 0.5),
                 fontSize: 14,
               ),
-              contentPadding: const EdgeInsets.symmetric(
+              contentPadding: EdgeInsets.symmetric(
                 horizontal: AppSpacing.paddingMedium,
                 vertical: 12,
               ),

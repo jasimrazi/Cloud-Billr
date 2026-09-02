@@ -147,7 +147,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       size: 64,
                       color: appColors.textSecondaryColor.withValues(alpha: 0.4),
                     ),
-                    const SizedBox(height: AppSpacing.spacingM),
+                    SizedBox(height: AppSpacing.spacingM),
                     Text(
                       'No notifications yet',
                       style: TextStyle(
@@ -159,7 +159,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 ),
               )
             : ListView.builder(
-                padding: const EdgeInsets.all(AppSpacing.mainPadding),
+                padding: EdgeInsets.all(AppSpacing.mainPadding),
                 itemCount: _notifications.length,
                 itemBuilder: (context, index) {
                   final notification = _notifications[index];
@@ -167,11 +167,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   final type = notification['type'] as String;
 
                   return Container(
-                    margin: const EdgeInsets.only(bottom: AppSpacing.marginMedium),
-                    padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+                    margin: EdgeInsets.only(bottom: AppSpacing.marginMedium),
+                    padding: EdgeInsets.all(AppSpacing.paddingMedium),
                     decoration: BoxDecoration(
                       color: isRead ? appColors.backgroundColor : appColors.surfaceColor,
-                      borderRadius: AppRadius.medium,
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
                       border: Border.all(
                         color: isRead ? appColors.borderColor : appColors.primaryColor.withValues(alpha: 0.2),
                         width: isRead ? 1 : 1.5,
@@ -189,7 +189,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             size: 20,
                           ),
                         ),
-                        const SizedBox(width: AppSpacing.spacingM),
+                        SizedBox(width: AppSpacing.spacingM),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

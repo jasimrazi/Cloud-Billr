@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_billr/main.dart';
 import 'package:cloud_billr/utils/theme.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/labeled_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -18,6 +21,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _companyController = TextEditingController(text: 'Doe Design Studio');
   final _websiteController = TextEditingController(text: 'www.doedesign.studio');
 
+  File? selectedImage;
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -27,6 +32,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _companyController.dispose();
     _websiteController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final ImagePicker picker = ImagePicker();
+  
+    final XFile? image = await picker.pickImage(
+      source: source,
+      imageQuality: 80,
+    );
+  
+    if (image != null) {
+      setState(() {
+        // Store/use the image here
+        selectedImage = File(image.path);
+      });
+    }
+  }
+
+  void _showImageSourceDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Take a photo'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Choose from gallery'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.delete_outline, color: appColors.redColor,),
+                title: Text('Remove Photo', style: TextStyle(color: appColors.redColor,)),
+                onTap: () {
+                  setState(() {
+                    selectedImage = null;
+                  });
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -53,7 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.mainPadding),
+          padding: EdgeInsets.all(AppSpacing.mainPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -66,28 +128,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         CircleAvatar(
                           radius: 50,
                           backgroundColor: appColors.secondaryColor,
-                          child: Icon(
-                            Icons.person,
-                            size: 50,
-                            color: appColors.textColor,
-                          ),
+                          backgroundImage: selectedImage != null
+                              ? FileImage(selectedImage!)
+                              : null,
+                          child: selectedImage == null
+                              ? Icon(
+                                  Icons.person,
+                                  size: 50,
+                                  color: appColors.textColor,
+                                )
+                              : null,
                         ),
                         Positioned(
                           bottom: 0,
                           right: 0,
-                          child: CircleAvatar(
-                            radius: 18,
-                            backgroundColor: appColors.primaryColor,
-                            child: const Icon(
-                              Icons.edit,
-                              size: 16,
-                              color: Colors.white,
+                          child: GestureDetector(
+                            onTap: () {
+                              _showImageSourceDialog(context);
+                            },
+                            child: CircleAvatar(
+                              radius: 18,
+                              backgroundColor: appColors.primaryColor,
+                              child: const Icon(
+                                Icons.edit,
+                                size: 16,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: AppSpacing.spacingM),
+                    SizedBox(height: AppSpacing.spacingM),
                     Text(
                       _nameController.text,
                       style: TextStyle(
@@ -106,7 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.spacingXL),
+              SizedBox(height: AppSpacing.spacingXL),
 
               // Personal Information Section
               Text(
@@ -117,33 +189,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               LabeledTextField(
                 label: 'Full Name',
                 hintText: 'Enter your full name',
                 controller: _nameController,
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               LabeledTextField(
                 label: 'Professional Title',
                 hintText: 'e.g., Freelance Designer',
                 controller: _titleController,
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               LabeledTextField(
                 label: 'Email Address',
                 hintText: 'Enter email address',
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               LabeledTextField(
                 label: 'Phone Number',
                 hintText: 'Enter phone number',
                 keyboardType: TextInputType.phone,
                 controller: _phoneController,
               ),
-              const SizedBox(height: AppSpacing.spacingXL),
+              SizedBox(height: AppSpacing.spacingXL),
 
               // Business Details Section
               Text(
@@ -154,30 +226,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               LabeledTextField(
                 label: 'Company Name',
                 hintText: 'Enter company name',
                 controller: _companyController,
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               LabeledTextField(
                 label: 'Website',
                 hintText: 'Enter website URL',
                 keyboardType: TextInputType.url,
                 controller: _websiteController,
               ),
-              const SizedBox(height: AppSpacing.spacingXL),
+              SizedBox(height: AppSpacing.spacingXL),
 
               // Save Button
               SizedBox(
                 width: double.infinity,
-                height: AppSpacing.buttonHeight,
+                // height: AppSpacing.buttonHeight,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: appColors.primaryColor,
                     shape: RoundedRectangleBorder(
-                      borderRadius: AppRadius.medium,
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
                     ),
                     elevation: 0,
                   ),
@@ -200,7 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.spacingXL),
+              SizedBox(height: AppSpacing.spacingXL),
             ],
           ),
         ),

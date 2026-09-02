@@ -68,8 +68,8 @@ class _TemplatesScreenState extends State<TemplatesScreen> {
       ),
       body: SafeArea(
         child: GridView.builder(
-          padding: const EdgeInsets.all(AppSpacing.mainPadding),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          padding: EdgeInsets.all(AppSpacing.mainPadding),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: AppSpacing.spacingM,
             crossAxisSpacing: AppSpacing.spacingM,
@@ -99,7 +99,7 @@ class _TemplatesScreenState extends State<TemplatesScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   color: appColors.surfaceColor,
-                  borderRadius: AppRadius.medium,
+                  borderRadius: BorderRadius.circular(AppRadius.medium),
                   border: Border.all(
                     color: isSelected ? appColors.primaryColor : appColors.borderColor,
                     width: isSelected ? 2 : 1,
@@ -111,10 +111,10 @@ class _TemplatesScreenState extends State<TemplatesScreen> {
                     // Visual Preview card Representation
                     Expanded(
                       child: Container(
-                        margin: const EdgeInsets.all(AppSpacing.paddingSmall),
+                        margin: EdgeInsets.all(AppSpacing.paddingSmall),
                         decoration: BoxDecoration(
                           color: appColors.backgroundColor,
-                          borderRadius: AppRadius.medium,
+                          borderRadius: BorderRadius.circular(AppRadius.medium),
                           border: Border.all(color: appColors.borderColor),
                         ),
                         child: Stack(
@@ -139,7 +139,7 @@ class _TemplatesScreenState extends State<TemplatesScreen> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(
+                      padding: EdgeInsets.only(
                         left: AppSpacing.paddingSmall,
                         right: AppSpacing.paddingSmall,
                         bottom: AppSpacing.paddingSmall,
