@@ -2,6 +2,7 @@ import 'package:cloud_billr/main.dart';
 import 'package:cloud_billr/models/customer_model.dart';
 import 'package:cloud_billr/utils/theme.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/labeled_text_field.dart';
+import 'package:cloud_billr/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 
 class AddEditCustomerScreen extends StatefulWidget {
@@ -105,49 +106,28 @@ class _AddEditCustomerScreenState extends State<AddEditCustomerScreen> {
                 controller: _addressController,
               ),
               SizedBox(height: AppSpacing.spacingXL),
-              SizedBox(
-                width: double.infinity,
-                // height: AppSpacing.buttonHeight,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appColors.primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppRadius.medium),
-                    ),
-                    elevation: 0,
-                  ),
-                  onPressed: () {
-                    final name = _nameController.text.trim();
-                    final email = _emailController.text.trim();
-                    final phone = _phoneController.text.trim();
-                    final address = _addressController.text.trim();
-
-                    if (name.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please enter a customer name.')),
-                      );
-                      return;
-                    }
-
-                    final result = CustomerModel(
-                      id: isEditing ? widget.customer!.id : UniqueKey().toString(),
-                      name: name,
-                      email: email,
-                      phone: phone, 
-                      address: address,
+              AppButton(
+                buttonLabel: isEditing ? 'Save Changes' : 'Create Profile', 
+                onTap: () {
+                  final name = _nameController.text.trim();
+                  final email = _emailController.text.trim();
+                  final phone = _phoneController.text.trim();
+                  final address = _addressController.text.trim();
+                  if (name.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please enter a customer name.')),
                     );
-
-                    Navigator.of(context).pop(result);
-                  },
-                  child: Text(
-                    isEditing ? 'Save Changes' : 'Create Profile',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                    return;
+                  }
+                  final result = CustomerModel(
+                    id: isEditing ? widget.customer!.id : UniqueKey().toString(),
+                    name: name,
+                    email: email,
+                    phone: phone, 
+                    address: address,
+                  );
+                  Navigator.of(context).pop(result);
+                }
               ),
             ],
           ),
