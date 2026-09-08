@@ -605,7 +605,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
         Switch.adaptive(
           value: value,
           activeTrackColor: appColors.primaryColor.withValues(alpha: 0.5),
-          activeColor: appColors.primaryColor,
+          activeThumbColor: appColors.primaryColor,
           onChanged: onChanged,
         ),
       ],

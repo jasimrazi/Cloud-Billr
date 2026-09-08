@@ -230,7 +230,7 @@ class InvoiceColumnEditor extends StatelessWidget {
         ReorderableListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          onReorder: (oldIndex, newIndex) => _onReorder(oldIndex, newIndex),
+          onReorderItem: (oldIndex, newIndex) => _onReorder(oldIndex, newIndex),
           proxyDecorator: (child, index, animation) {
             return Material(
               color: Colors.transparent,

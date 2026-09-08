@@ -146,5 +146,13 @@ class DatabaseHelper {
     final results = await db.query('invoice_template_configs', limit: 1);
     return results.isNotEmpty ? results.first : null;
   }
+
+
+  // ---- CRUD HELPERS FOR USER
+
+  Future<int> saveUser(Map<String, dynamic> row) async {
+    final db = await instance.database;
+    return await db.insert('users', row, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
 }
 

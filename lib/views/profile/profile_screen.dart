@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:cloud_billr/controllers/user_provider.dart';
 import 'package:cloud_billr/main.dart';
+import 'package:cloud_billr/models/app_snackbar.dart';
 import 'package:cloud_billr/models/user_model.dart';
 import 'package:cloud_billr/utils/theme.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/labeled_text_field.dart';
@@ -338,17 +340,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // Save Button
                 AppButton(
                   buttonLabel: 'Save Changes', 
-                  onTap: (){
+                  onTap: () async {
                     if (_formKey.currentState!.validate()) {
                       final result = onSave();
 
-                      // Provider.of<UserPr
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Profile updated successfully!'),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
+                      final saveResult = await Provider.of<UserProvider>(context, listen: false).saveProfile(result);
+
+                      if(saveResult.message != null && context.mounted){
+                        AppSnackBar.show(context, saveResult.message!, saveResult.status? appColors.successGreenColor : appColors.redColor);
+                      }
                     }
                   }
                 ),
