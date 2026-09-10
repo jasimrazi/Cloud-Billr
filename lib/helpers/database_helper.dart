@@ -38,6 +38,28 @@ class DatabaseHelper {
     }
   }
 
+  // Future<void> printTables() async {
+  //   try{
+  //     final db = await DatabaseHelper.instance.database;
+
+  //     print('query tables');
+
+  //     final result = await db.rawQuery(
+  //       "SELECT name FROM sqlite_master WHERE type = 'table'",
+  //     );
+
+  //     print('tables selected');
+
+  //     for (final table in result) {
+  //       debugPrint('TABLE: ${table['name']}');
+  //     }
+
+  //     print('tables listed');
+  //   }catch(e){
+  //     // print(e);
+  //   }
+  // }
+
   // --- CRUD HELPERS FOR COMPANIES ---
   
   Future<int> insertCompany(Map<String, dynamic> row) async {

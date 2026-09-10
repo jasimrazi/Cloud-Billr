@@ -1,8 +1,8 @@
-class ErrorModel {
+class ResultStatus {
   bool status;
   String? message;
 
-  ErrorModel({
+  ResultStatus({
     required this.status,
     this.message
   });

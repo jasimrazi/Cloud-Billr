@@ -1,4 +1,6 @@
 import 'package:cloud_billr/database/migrations/migration_v1.dart';
+import 'package:cloud_billr/database/migrations/migration_v10.dart';
+import 'package:cloud_billr/database/migrations/migration_v11.dart';
 import 'package:cloud_billr/database/migrations/migration_v2.dart';
 import 'package:cloud_billr/database/migrations/migration_v3.dart';
 import 'package:cloud_billr/database/migrations/migration_v4.dart';
@@ -20,5 +22,7 @@ const List<String> databaseMigrations = [
   migrationV7,
   migrationV8,
   migrationV9,
+  migrationV10,
+  migrationV11
 ];
 
