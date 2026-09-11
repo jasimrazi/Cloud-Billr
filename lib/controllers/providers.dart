@@ -5,6 +5,7 @@ import 'package:cloud_billr/controllers/customer_provider.dart';
 import 'package:cloud_billr/controllers/create_invoice_provider.dart';
 import 'package:cloud_billr/controllers/invoice_config_provider.dart';
 import 'package:cloud_billr/controllers/theme_provider.dart';
+import 'package:cloud_billr/controllers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -17,5 +18,6 @@ List<SingleChildWidget> createProviders({ThemeMode? initialThemeMode}) => [
   ChangeNotifierProvider(create: (_) => CreateInvoiceProvider()),
   ChangeNotifierProvider(create: (_) => InvoiceConfigProvider()),
   ChangeNotifierProvider(create: (_) => ThemeProvider(initialMode: initialThemeMode)),
+  ChangeNotifierProvider(create: (_) => UserProvider()),
 ];
 

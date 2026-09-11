@@ -1,4 +1,5 @@
 import 'package:cloud_billr/database/migrations.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -37,6 +38,28 @@ class DatabaseHelper {
       await db.execute(databaseMigrations[i]);
     }
   }
+
+  // Future<void> printTables() async {
+  //   try{
+  //     final db = await DatabaseHelper.instance.database;
+
+  //     print('query tables');
+
+  //     final result = await db.rawQuery(
+  //       "SELECT name FROM sqlite_master WHERE type = 'table'",
+  //     );
+
+  //     print('tables selected');
+
+  //     for (final table in result) {
+  //       debugPrint('TABLE: ${table['name']}');
+  //     }
+
+  //     print('tables listed');
+  //   }catch(e){
+  //     // print(e);
+  //   }
+  // }
 
   // --- CRUD HELPERS FOR COMPANIES ---
   
@@ -145,6 +168,79 @@ class DatabaseHelper {
     final db = await instance.database;
     final results = await db.query('invoice_template_configs', limit: 1);
     return results.isNotEmpty ? results.first : null;
+  }
+
+
+  // ---- CRUD HELPERS FOR USER
+
+  Future<int> saveUser(Map<String, dynamic> row) async {
+    final db = await instance.database;
+    return await db.insert('users', row, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<Map<String, dynamic>?> loadUser() async {
+    final db = await instance.database;
+    final results = await db.query('users', limit: 1,);
+    return results.isNotEmpty? results.first : null;
+  }
+
+  Future<void> saveProfilePhoto({
+    required String userId,
+    required String photoPath,
+  }) async {
+    final db = await instance.database;
+  
+    final existingPhoto = await db.query(
+      'photos',
+      where: 'user_id = ?',
+      whereArgs: [userId],
+    );
+  
+    if (existingPhoto.isNotEmpty) {
+      await db.update(
+        'photos',
+        {
+          'photo_path': photoPath,
+        },
+        where: 'user_id = ?',
+        whereArgs: [userId],
+      );
+    } else {
+      await db.insert(
+        'photos',
+        {
+          'id': UniqueKey().toString(),
+          'user_id': userId,
+          'photo_path': photoPath,
+        },
+      );
+    }
+  }
+
+  Future<String?> loadProfilePhoto({
+    required String userId,
+  }) async {
+    final db = await instance.database;
+  
+    final photo = await db.query(
+      'photos',
+      where: 'user_id = ?',
+      whereArgs: [userId],
+    );
+  
+    if (photo.isNotEmpty) {
+      final result = photo.first;
+      return result['photo_path'].toString();
+    } else {
+      return null;
+    }
+  }
+
+  Future<void> deleteProfilePhoto({
+    required String userId,
+  }) async {
+    final db = await instance.database;
+    await db.delete('photos', where: 'user_id = ?', whereArgs: [userId]);
   }
 }
 

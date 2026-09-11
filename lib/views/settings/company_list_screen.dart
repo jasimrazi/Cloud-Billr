@@ -64,7 +64,7 @@ class CompanyListScreen extends StatelessWidget {
                       size: 64,
                       color: appColors.textSecondaryColor.withValues(alpha: 0.4),
                     ),
-                    const SizedBox(height: AppSpacing.spacingM),
+                    SizedBox(height: AppSpacing.spacingM),
                     Text(
                       'No company profiles saved yet',
                       style: TextStyle(
@@ -72,12 +72,12 @@ class CompanyListScreen extends StatelessWidget {
                         fontSize: 16,
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.spacingM),
+                    SizedBox(height: AppSpacing.spacingM),
                     OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(color: appColors.borderColor),
                         shape: RoundedRectangleBorder(
-                          borderRadius: AppRadius.medium,
+                          borderRadius: BorderRadius.circular(AppRadius.medium),
                         ),
                       ),
                       onPressed: () async {
@@ -102,7 +102,7 @@ class CompanyListScreen extends StatelessWidget {
             }
 
             return ListView.builder(
-              padding: const EdgeInsets.all(AppSpacing.mainPadding),
+              padding: EdgeInsets.all(AppSpacing.mainPadding),
               itemCount: list.length,
               itemBuilder: (context, index) {
                 final company = list[index];
@@ -111,11 +111,11 @@ class CompanyListScreen extends StatelessWidget {
                     : '?';
 
                 return Container(
-                  margin: const EdgeInsets.only(bottom: AppSpacing.marginMedium),
-                  padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+                  margin: EdgeInsets.only(bottom: AppSpacing.marginMedium),
+                  padding: EdgeInsets.all(AppSpacing.paddingMedium),
                   decoration: BoxDecoration(
                     color: appColors.surfaceColor,
-                    borderRadius: AppRadius.medium,
+                    borderRadius: BorderRadius.circular(AppRadius.medium),
                     border: Border.all(color: appColors.borderColor),
                   ),
                   child: Row(
@@ -132,7 +132,7 @@ class CompanyListScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: AppSpacing.spacingM),
+                      SizedBox(width: AppSpacing.spacingM),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,7 +172,7 @@ class CompanyListScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: AppSpacing.spacingS),
+                      SizedBox(width: AppSpacing.spacingS),
                       Column(
                         children: [
                           IconButton(

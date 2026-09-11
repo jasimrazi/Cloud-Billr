@@ -71,12 +71,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          const SizedBox(width: AppSpacing.paddingSmall),
+          SizedBox(width: AppSpacing.paddingSmall),
         ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(
+          padding: EdgeInsets.symmetric(
             horizontal: AppSpacing.mainPadding,
             vertical: AppSpacing.paddingSmall,
           ),
@@ -94,57 +94,57 @@ class _HomeScreenState extends State<HomeScreen> {
                       blurStyle: BlurStyle.outer,
                     )
                   ],
-                  borderRadius: AppRadius.medium,
+                  borderRadius: BorderRadius.circular(AppRadius.medium),
                 ),
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   horizontal: AppSpacing.paddingSmall,
                   vertical: AppSpacing.paddingMedium,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const CreateInvoiceScreen()),
-                      ),
-                      child: IconWidget(
-                        icon: const Icon(Icons.add),
-                        label: 'New Invoice',
-                        color: appColors.primaryColor,
-                      ),
+                    IconWidget(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const CreateInvoiceScreen()),
+                        );
+                      },
+                      icon: const Icon(Icons.add),
+                      label: 'New Invoice',
+                      color: appColors.primaryColor,
                     ),
-                    GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const PastInvoicesScreen()),
-                      ),
-                      child: IconWidget(
-                        icon: const Icon(Icons.description_outlined),
-                        label: 'View All',
-                        color: appColors.successGreenColor,
-                      ),
+                    IconWidget(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const PastInvoicesScreen()),
+                        );
+                      },
+                      icon: const Icon(Icons.description_outlined),
+                      label: 'View All',
+                      color: appColors.successGreenColor,
                     ),
-                    GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const TemplatesScreen()),
-                      ),
-                      child: IconWidget(
-                        icon: const Icon(Icons.grid_view_outlined),
-                        label: 'Templates',
-                        color: appColors.violetColor,
-                      ),
+                    IconWidget(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const TemplatesScreen()),
+                        );
+                      },
+                      icon: const Icon(Icons.grid_view_outlined),
+                      label: 'Templates',
+                      color: appColors.violetColor,
                     )
                   ],
                 ),
               ),
               SizedBox(height: AppSpacing.spacingL),
               Container(
-                padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+                padding: EdgeInsets.all(AppSpacing.paddingMedium),
                 decoration: BoxDecoration(
                   color: appColors.secondaryColor,
-                  borderRadius: AppRadius.medium,
+                  borderRadius: BorderRadius.circular(AppRadius.medium),
                 ),
                 child: Row(
                   children: [
@@ -194,9 +194,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   final revenue = invoiceProvider.totalRevenue;
                   final pending = invoiceProvider.pendingAmount;
                   return Container(
-                    padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+                    padding: EdgeInsets.all(AppSpacing.paddingMedium),
                     decoration: BoxDecoration(
-                      borderRadius: AppRadius.medium,
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
                       boxShadow: [
                         BoxShadow(
                           offset: const Offset(0, 1),
@@ -277,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 24,
                         height: 24,
                       ),
-                      const SizedBox(width: AppSpacing.spacingS),
+                      SizedBox(width: AppSpacing.spacingS),
                       Expanded(
                         child: Text(
                           'Settings',

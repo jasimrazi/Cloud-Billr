@@ -39,7 +39,7 @@ class SettingsTile extends StatelessWidget {
               children: [
                 if (leadingIcon != null) ...[
                   Icon(leadingIcon, color: defaultIconColor, size: 22),
-                  const SizedBox(width: AppSpacing.spacingM),
+                  SizedBox(width: AppSpacing.spacingM),
                 ],
                 Expanded(
                   child: Text(

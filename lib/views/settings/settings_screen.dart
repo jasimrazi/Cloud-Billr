@@ -50,7 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.symmetric(
+          padding: EdgeInsets.symmetric(
             horizontal: AppSpacing.mainPadding,
             vertical: AppSpacing.paddingSmall,
           ),
@@ -111,7 +111,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             _buildDivider(),
-            const SizedBox(height: AppSpacing.spacingL),
+            SizedBox(height: AppSpacing.spacingL),
 
             // Invoice Defaults Section
             _buildSectionHeader('Invoice Defaults'),
@@ -126,7 +126,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               trailing: _buildTrailingTextWithChevron('18%'),
               onTap: () {},
             ),
-            const SizedBox(height: AppSpacing.spacingL),
+            SizedBox(height: AppSpacing.spacingL),
 
             // Backup & Sync Section
             _buildSectionHeader('Backup & Sync'),
@@ -150,7 +150,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               trailing: _buildTrailingTextWithChevron('Daily'),
               onTap: () {},
             ),
-            const SizedBox(height: AppSpacing.spacingL),
+            SizedBox(height: AppSpacing.spacingL),
 
             // App Preferences Section
             _buildSectionHeader('App Preferences'),
@@ -188,7 +188,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               trailing: _buildTrailingTextWithChevron('English'),
               onTap: () {},
             ),
-            const SizedBox(height: AppSpacing.spacingL),
+            SizedBox(height: AppSpacing.spacingL),
 
             // Data Management Section
             _buildSectionHeader('Data Management'),
@@ -213,7 +213,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: 'Clear All Data',
               onTap: () {},
             ),
-            const SizedBox(height: AppSpacing.spacingXL),
+            SizedBox(height: AppSpacing.spacingXL),
           ],
         ),
       ),
