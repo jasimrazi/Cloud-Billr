@@ -5,6 +5,7 @@ import 'package:cloud_billr/main.dart';
 import 'package:cloud_billr/models/app_snackbar.dart';
 import 'package:cloud_billr/models/user_model.dart';
 import 'package:cloud_billr/utils/theme.dart';
+import 'package:cloud_billr/utils/validators.dart';
 import 'package:cloud_billr/views/create_invoice/widgets/labeled_text_field.dart';
 import 'package:cloud_billr/widgets/app_button.dart';
 import 'package:flutter/material.dart';
@@ -28,65 +29,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   File? selectedImage;
   final _formKey = GlobalKey<FormState>();
+  UserModel? user;
 
-  String? requiredValidator(String? value, String fieldName) {
-    if (value == null || value.trim().isEmpty) {
-      return '$fieldName is required';
-    }
-    return null;
-  }
-
-  String? emailValidator(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Email is required';
-    }
-
-    final email = value.trim();
-
-    if (!email.contains('@') || !email.contains('.')) {
-      return 'Enter a valid email address';
-    }
-
-    return null;
-  }
-
-  String? phoneValidator(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Phone number is required';
-    }
-
-    final phone = value.trim();
-
-    // Remove spaces, + and -
-    final cleanedPhone = phone.replaceAll(' ', '').replaceAll('-', '');
-
-    if (cleanedPhone.startsWith('+')) {
-      if (cleanedPhone.length < 10 || cleanedPhone.length > 15) {
-        return 'Enter a valid phone number';
-      }
-    } else {
-      if (cleanedPhone.length < 7 || cleanedPhone.length > 15) {
-        return 'Enter a valid phone number';
-      }
-    }
-
-    return null;
-  }
-
-  String? websiteValidator(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return null; // Website is optional
-    }
-
-    final website = value.trim().toLowerCase();
-
-    if (!website.startsWith('http://') &&
-        !website.startsWith('https://') &&
-        !website.startsWith('www.')) {
-      return 'Enter a valid website URL';
-    }
-
-    return null;
+  @override
+  void initState(){
+    super.initState();
+    loadUser();
   }
 
   @override
@@ -100,18 +48,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
-  Future<void> _pickImage(ImageSource source) async {
-    final ImagePicker picker = ImagePicker();
-  
-    final XFile? image = await picker.pickImage(
-      source: source,
-      imageQuality: 80,
+  Future<void> loadUser()async{
+    final provider = context.read<UserProvider>();
+    user = await provider.loadProfile();
+    if(user != null){
+      _nameController.text = user!.name;
+      _emailController.text = user!.email;
+      _phoneController.text = user!.phone;
+      _titleController.text = user!.title;
+      _companyController.text = user!.companyName;
+      _websiteController.text = user!.websiteLink;
+
+      final photo = await provider.loadProfilePhoto(user!.id);
+
+      if(photo != null){
+        selectedImage = File(photo);
+      }
+
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
+
+  Future<void> onPickImage(ImageSource imageSource) async {
+    Navigator.pop(context);
+    final image = await context.read<UserProvider>().pickImage(
+      imageSource,
     );
-  
-    if (image != null) {
+
+    if (image != null && mounted) {
       setState(() {
-        // Store/use the image here
-        selectedImage = File(image.path);
+        selectedImage = image;
       });
     }
   }
@@ -127,27 +95,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 leading: const Icon(Icons.camera_alt),
                 title: const Text('Take a photo'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _pickImage(ImageSource.camera);
-                },
+                onTap: () => onPickImage(ImageSource.camera),
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library),
                 title: const Text('Choose from gallery'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _pickImage(ImageSource.gallery);
-                },
+                onTap: () => onPickImage(ImageSource.gallery)
               ),
               ListTile(
                 leading: Icon(Icons.delete_outline, color: appColors.redColor,),
                 title: Text('Remove Photo', style: TextStyle(color: appColors.redColor,)),
-                onTap: () {
+                onTap: () async {
+                  if(user != null){
+                    await context.read<UserProvider>().deleteProfilePhoto(user!.id);
+                  }
                   setState(() {
                     selectedImage = null;
                   });
-                  Navigator.pop(context);
+                  if(context.mounted){
+                    Navigator.pop(context);
+                  }
                 },
               ),
             ],
@@ -166,7 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final website = _websiteController.text.trim();
 
     final result = UserModel(
-      id: UniqueKey().toString(), 
+      id: user?.id ?? UniqueKey().toString(), 
       name: name, 
       email: email, 
       phone: phone, 
@@ -283,14 +250,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   label: 'Full Name',
                   hintText: 'Enter your full name',
                   controller: _nameController,
-                  validator: (value) => requiredValidator(value, 'Name'),
+                  validator: (value) => Validators.requiredValidator(value, 'Name'),
                 ),
                 SizedBox(height: AppSpacing.spacingM),
                 LabeledTextField(
                   label: 'Professional Title',
                   hintText: 'e.g., Freelance Designer',
                   controller: _titleController,
-                  validator: (value) => requiredValidator(value, 'Title'),
+                  validator: (value) => Validators.requiredValidator(value, 'Title'),
                 ),
                 SizedBox(height: AppSpacing.spacingM),
                 LabeledTextField(
@@ -298,7 +265,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   hintText: 'Enter email address',
                   keyboardType: TextInputType.emailAddress,
                   controller: _emailController,
-                  validator: emailValidator,
+                  validator:Validators.emailValidator,
                 ),
                 SizedBox(height: AppSpacing.spacingM),
                 LabeledTextField(
@@ -306,7 +273,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   hintText: 'Enter phone number',
                   keyboardType: TextInputType.phone,
                   controller: _phoneController,
-                  validator: phoneValidator,
+                  validator: Validators.phoneValidator,
                 ),
                 SizedBox(height: AppSpacing.spacingXL),
             
@@ -324,7 +291,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   label: 'Company Name',
                   hintText: 'Enter company name',
                   controller: _companyController,
-                  validator: (value) => requiredValidator(value, 'Company name'),
+                  validator: (value) => Validators.requiredValidator(value, 'Company name'),
                   
                 ),
                 SizedBox(height: AppSpacing.spacingM),
@@ -333,7 +300,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   hintText: 'Enter website URL',
                   keyboardType: TextInputType.url,
                   controller: _websiteController,
-                  validator: websiteValidator,
+                  validator: Validators.websiteValidator,
                 ),
                 SizedBox(height: AppSpacing.spacingXL),
             
@@ -344,7 +311,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     if (_formKey.currentState!.validate()) {
                       final result = onSave();
 
-                      final saveResult = await Provider.of<UserProvider>(context, listen: false).saveProfile(result);
+                      final saveResult = await context.read<UserProvider>().saveProfile(result, selectedImage?.path);
 
                       if(saveResult.message != null && context.mounted){
                         AppSnackBar.show(context, saveResult.message!, saveResult.status? appColors.successGreenColor : appColors.redColor);
