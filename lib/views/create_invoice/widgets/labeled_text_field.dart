@@ -9,6 +9,7 @@ class LabeledTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final Widget? suffixIcon;
   final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
   const LabeledTextField({
     super.key,
@@ -18,6 +19,7 @@ class LabeledTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.suffixIcon,
     this.controller,
+    this.validator,
   });
 
   @override
@@ -34,15 +36,16 @@ class LabeledTextField extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: AppSpacing.spacingS),
+          SizedBox(height: AppSpacing.spacingS),
         ],
         Container(
           decoration: BoxDecoration(
             color: appColors.surfaceColor,
-            borderRadius: AppRadius.medium,
+            borderRadius: BorderRadius.circular(AppRadius.medium),
             border: Border.all(color: appColors.borderColor),
           ),
-          child: TextField(
+          child: TextFormField(
+            validator: validator,
             controller: controller,
             maxLines: maxLines,
             keyboardType: keyboardType,
@@ -53,7 +56,7 @@ class LabeledTextField extends StatelessWidget {
                 color: appColors.textSecondaryColor.withValues(alpha: 0.5),
                 fontSize: 14,
               ),
-              contentPadding: const EdgeInsets.symmetric(
+              contentPadding: EdgeInsets.symmetric(
                 horizontal: AppSpacing.paddingMedium,
                 vertical: 12,
               ),

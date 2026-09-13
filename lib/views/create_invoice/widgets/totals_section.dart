@@ -18,17 +18,17 @@ class TotalsSection extends StatelessWidget {
         final grand = provider.grandTotal;
 
         return Container(
-          padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+          padding: EdgeInsets.all(AppSpacing.paddingMedium),
           decoration: BoxDecoration(
             color: appColors.surfaceColor,
-            borderRadius: AppRadius.medium,
+            borderRadius: BorderRadius.circular(AppRadius.medium),
             border: Border.all(color: appColors.borderColor),
           ),
           child: Column(
             children: [
               _buildRow('Subtotal', '$symbol${subtotal.toStringAsFixed(2)}'),
               if (provider.taxEnabled) ...[
-                const SizedBox(height: AppSpacing.spacingM),
+                SizedBox(height: AppSpacing.spacingM),
                 _buildRow(
                   '${provider.taxLabel} (${provider.taxRate.toStringAsFixed(0)}%)'
                   '${provider.taxIsInclusive ? ' – incl.' : ''}',
@@ -36,12 +36,12 @@ class TotalsSection extends StatelessWidget {
                 ),
               ],
               if (provider.discountEnabled) ...[
-                const SizedBox(height: AppSpacing.spacingM),
+                SizedBox(height: AppSpacing.spacingM),
                 _buildDiscountRow(context, provider, symbol),
               ],
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               Divider(color: appColors.borderColor, thickness: 1),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -120,7 +120,7 @@ class TotalsSection extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: appColors.backgroundColor,
-                  borderRadius: AppRadius.medium,
+                  borderRadius: BorderRadius.circular(AppRadius.medium),
                   border: Border.all(color: appColors.borderColor),
                 ),
                 child: TextField(

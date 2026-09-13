@@ -85,7 +85,7 @@ class _AddEditCompanyScreenState extends State<AddEditCompanyScreen> {
 
             return SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.mainPadding),
+                padding: EdgeInsets.all(AppSpacing.mainPadding),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +107,7 @@ class _AddEditCompanyScreenState extends State<AddEditCompanyScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: AppSpacing.spacingM),
+                    SizedBox(height: AppSpacing.spacingM),
                     Text(
                       'Choose Branding Color',
                       style: TextStyle(
@@ -116,7 +116,7 @@ class _AddEditCompanyScreenState extends State<AddEditCompanyScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.spacingS),
+                    SizedBox(height: AppSpacing.spacingS),
                     SizedBox(
                       height: 40,
                       child: ListView.builder(
@@ -153,7 +153,7 @@ class _AddEditCompanyScreenState extends State<AddEditCompanyScreen> {
                         },
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.spacingM),
+                    SizedBox(height: AppSpacing.spacingM),
                     Text(
                       'Choose Logo Icon',
                       style: TextStyle(
@@ -162,7 +162,7 @@ class _AddEditCompanyScreenState extends State<AddEditCompanyScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.spacingS),
+                    SizedBox(height: AppSpacing.spacingS),
                     SizedBox(
                       height: 150,
                       child: GridView.builder(
@@ -191,7 +191,7 @@ class _AddEditCompanyScreenState extends State<AddEditCompanyScreen> {
                             child: Container(
                               decoration: BoxDecoration(
                                 color: isSel ? themeColor.withValues(alpha: 0.15) : appColors.surfaceColor,
-                                borderRadius: AppRadius.medium,
+                                borderRadius: BorderRadius.circular(AppRadius.medium),
                                 border: Border.all(
                                   color: isSel ? themeColor : appColors.borderColor,
                                   width: isSel ? 2 : 1,
@@ -206,15 +206,15 @@ class _AddEditCompanyScreenState extends State<AddEditCompanyScreen> {
                         },
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.spacingM),
+                    SizedBox(height: AppSpacing.spacingM),
                     SizedBox(
                       width: double.infinity,
-                      height: AppSpacing.buttonHeight,
+                      // height: AppSpacing.buttonHeight,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: appColors.primaryColor,
                           shape: RoundedRectangleBorder(
-                            borderRadius: AppRadius.medium,
+                            borderRadius: BorderRadius.circular(AppRadius.medium),
                           ),
                           elevation: 0,
                         ),
@@ -269,7 +269,7 @@ class _AddEditCompanyScreenState extends State<AddEditCompanyScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.mainPadding),
+          padding: EdgeInsets.all(AppSpacing.mainPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -281,39 +281,39 @@ class _AddEditCompanyScreenState extends State<AddEditCompanyScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               LogoPicker(
                 logoPath: _logoPath,
                 onTap: _showLogoPicker,
               ),
-              const SizedBox(height: AppSpacing.spacingXL),
+              SizedBox(height: AppSpacing.spacingXL),
               LabeledTextField(
                 label: 'Company Name',
                 hintText: 'e.g. Acme Corp',
                 controller: _nameController,
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               LabeledTextField(
                 label: 'Address',
                 hintText: 'Enter company address',
                 maxLines: 3,
                 controller: _addressController,
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               LabeledTextField(
                 label: 'Contact Details',
                 hintText: 'e.g. email / phone number',
                 controller: _contactController,
               ),
-              const SizedBox(height: AppSpacing.spacingXL),
+              SizedBox(height: AppSpacing.spacingXL),
               SizedBox(
                 width: double.infinity,
-                height: AppSpacing.buttonHeight,
+                // height: AppSpacing.buttonHeight,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: appColors.primaryColor,
                     shape: RoundedRectangleBorder(
-                      borderRadius: AppRadius.medium,
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
                     ),
                     elevation: 0,
                   ),

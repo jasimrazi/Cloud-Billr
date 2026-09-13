@@ -24,7 +24,7 @@ class TemplatePicker extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: AppSpacing.spacingM),
+            SizedBox(height: AppSpacing.spacingM),
             SizedBox(
               height: 100,
               child: Row(
@@ -41,7 +41,7 @@ class TemplatePicker extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: appColors.surfaceColor,
-                          borderRadius: AppRadius.medium,
+                          borderRadius: BorderRadius.circular(AppRadius.medium),
                           border: Border.all(
                             color: isSelected
                                 ? appColors.primaryColor
@@ -61,7 +61,7 @@ class TemplatePicker extends StatelessWidget {
                                     : appColors.textSecondaryColor
                                         .withValues(alpha: 0.5),
                               ),
-                              const SizedBox(height: AppSpacing.spacingXS),
+                              SizedBox(height: AppSpacing.spacingXS),
                               Text(
                                 _templateName(index),
                                 textAlign: TextAlign.center,

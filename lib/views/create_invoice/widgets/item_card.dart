@@ -80,11 +80,11 @@ class _ItemCardState extends State<ItemCard> {
         final symbol = provider.currencySymbol;
 
         return Container(
-          padding: const EdgeInsets.all(AppSpacing.paddingMedium),
-          margin: const EdgeInsets.only(bottom: AppSpacing.marginMedium),
+          padding: EdgeInsets.all(AppSpacing.paddingMedium),
+          margin: EdgeInsets.only(bottom: AppSpacing.marginMedium),
           decoration: BoxDecoration(
             color: appColors.backgroundColor,
-            borderRadius: AppRadius.medium,
+            borderRadius: BorderRadius.circular(AppRadius.medium),
             border: Border.all(color: appColors.borderColor),
           ),
           child: Column(
@@ -137,12 +137,12 @@ class _ItemCardState extends State<ItemCard> {
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               _buildField(
                 controller: _descController,
                 hint: 'Item description',
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               Row(
                 children: [
                   Expanded(
@@ -156,7 +156,7 @@ class _ItemCardState extends State<ItemCard> {
                       ],
                     ),
                   ),
-                  const SizedBox(width: AppSpacing.spacingM),
+                  SizedBox(width: AppSpacing.spacingM),
                   Expanded(
                     child: _buildField(
                       controller: _rateController,
@@ -187,7 +187,7 @@ class _ItemCardState extends State<ItemCard> {
     return Container(
       decoration: BoxDecoration(
         color: appColors.surfaceColor,
-        borderRadius: AppRadius.medium,
+        borderRadius: BorderRadius.circular(AppRadius.medium),
         border: Border.all(color: appColors.borderColor),
       ),
       child: TextField(
@@ -201,7 +201,7 @@ class _ItemCardState extends State<ItemCard> {
             color: appColors.textSecondaryColor.withValues(alpha: 0.5),
             fontSize: 14,
           ),
-          contentPadding: const EdgeInsets.symmetric(
+          contentPadding: EdgeInsets.symmetric(
               horizontal: AppSpacing.paddingMedium, vertical: 12),
           border: InputBorder.none,
         ),

@@ -109,7 +109,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
           backgroundColor: appColors.primaryColor,
           behavior: SnackBarBehavior.floating,
           shape:
-              RoundedRectangleBorder(borderRadius: AppRadius.medium),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.medium)),
         ),
       );
       Navigator.of(context).pop();
@@ -153,7 +153,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.symmetric(
+          padding: EdgeInsets.symmetric(
             horizontal: AppSpacing.mainPadding,
             vertical: AppSpacing.paddingSmall,
           ),
@@ -166,7 +166,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildLabel('Number Format'),
-                  const SizedBox(height: AppSpacing.spacingS),
+                  SizedBox(height: AppSpacing.spacingS),
                   _buildTextField(
                     controller: _numberFormatController,
                     hint: 'e.g. INV-{YEAR}-{SEQ}',
@@ -206,9 +206,9 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                       fontSize: 11,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.spacingM),
+                  SizedBox(height: AppSpacing.spacingM),
                   _buildLabel('Starting Number'),
-                  const SizedBox(height: AppSpacing.spacingS),
+                  SizedBox(height: AppSpacing.spacingS),
                   _buildTextField(
                     controller: _numberStartAtController,
                     hint: '1',
@@ -218,7 +218,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.spacingM),
+            SizedBox(height: AppSpacing.spacingM),
 
             // ── Currency ───────────────────────────────────────────────
             _SectionHeader(title: 'Currency'),
@@ -227,7 +227,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildLabel('Select Currency'),
-                  const SizedBox(height: AppSpacing.spacingS),
+                  SizedBox(height: AppSpacing.spacingS),
                   _buildDropdown<String>(
                     value: _config.currency,
                     items: _currencies
@@ -254,7 +254,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.spacingM),
+            SizedBox(height: AppSpacing.spacingM),
 
             // ── Line Item Columns ──────────────────────────────────────
             _SectionHeader(title: 'Line Item Columns'),
@@ -269,7 +269,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                       fontSize: 12,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.spacingM),
+                  SizedBox(height: AppSpacing.spacingM),
                   InvoiceColumnEditor(
                     columns: _config.lineItemColumns,
                     onChanged: (updated) {
@@ -282,7 +282,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.spacingM),
+            SizedBox(height: AppSpacing.spacingM),
 
             // ── Tax ───────────────────────────────────────────────────
             _SectionHeader(title: 'Tax'),
@@ -298,7 +298,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                   ),
                   if (_config.taxEnabled) ...[
                     _buildDividerLine(),
-                    const SizedBox(height: AppSpacing.spacingM),
+                    SizedBox(height: AppSpacing.spacingM),
                     Row(
                       children: [
                         Expanded(
@@ -307,20 +307,20 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _buildLabel('Tax Label'),
-                              const SizedBox(height: AppSpacing.spacingS),
+                              SizedBox(height: AppSpacing.spacingS),
                               _buildTextField(
                                   controller: _taxLabelController,
                                   hint: 'GST / VAT / Tax'),
                             ],
                           ),
                         ),
-                        const SizedBox(width: AppSpacing.spacingM),
+                        SizedBox(width: AppSpacing.spacingM),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _buildLabel('Rate (%)'),
-                              const SizedBox(height: AppSpacing.spacingS),
+                              SizedBox(height: AppSpacing.spacingS),
                               _buildTextField(
                                 controller: _taxRateController,
                                 hint: '0',
@@ -337,9 +337,9 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: AppSpacing.spacingM),
+                    SizedBox(height: AppSpacing.spacingM),
                     _buildLabel('Tax Calculation'),
-                    const SizedBox(height: AppSpacing.spacingS),
+                    SizedBox(height: AppSpacing.spacingS),
                     _buildSegmentedRow(
                       options: const ['Exclusive (added on top)', 'Inclusive (already in price)'],
                       selectedIndex: _config.taxIsInclusive ? 1 : 0,
@@ -350,7 +350,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.spacingM),
+            SizedBox(height: AppSpacing.spacingM),
 
             // ── Discount ──────────────────────────────────────────────
             _SectionHeader(title: 'Discount'),
@@ -366,9 +366,9 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                   ),
                   if (_config.discountEnabled) ...[
                     _buildDividerLine(),
-                    const SizedBox(height: AppSpacing.spacingM),
+                    SizedBox(height: AppSpacing.spacingM),
                     _buildLabel('Discount Type'),
-                    const SizedBox(height: AppSpacing.spacingS),
+                    SizedBox(height: AppSpacing.spacingS),
                     _buildSegmentedRow(
                       options: const ['Percentage (%)', 'Fixed Amount'],
                       selectedIndex:
@@ -382,7 +382,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.spacingM),
+            SizedBox(height: AppSpacing.spacingM),
 
             // ── Shipping / Extra Charges ───────────────────────────────
             _SectionHeader(title: 'Shipping & Extra Charges'),
@@ -398,9 +398,9 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                   ),
                   if (_config.shippingEnabled) ...[
                     _buildDividerLine(),
-                    const SizedBox(height: AppSpacing.spacingM),
+                    SizedBox(height: AppSpacing.spacingM),
                     _buildLabel('Field Label'),
-                    const SizedBox(height: AppSpacing.spacingS),
+                    SizedBox(height: AppSpacing.spacingS),
                     _buildTextField(
                       controller: _shippingLabelController,
                       hint: 'Shipping & Handling',
@@ -409,7 +409,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.spacingM),
+            SizedBox(height: AppSpacing.spacingM),
 
             // ── Due Date ──────────────────────────────────────────────
             _SectionHeader(title: 'Due Date'),
@@ -418,7 +418,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildLabel('Due Date Type'),
-                  const SizedBox(height: AppSpacing.spacingS),
+                  SizedBox(height: AppSpacing.spacingS),
                   _buildDropdown<String>(
                     value: _config.dueDateType,
                     items: const [
@@ -435,9 +435,9 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                         () => _config = _config.copyWith(dueDateType: val!)),
                   ),
                   if (_config.dueDateType == 'net_days') ...[
-                    const SizedBox(height: AppSpacing.spacingM),
+                    SizedBox(height: AppSpacing.spacingM),
                     _buildLabel('Net Days'),
-                    const SizedBox(height: AppSpacing.spacingS),
+                    SizedBox(height: AppSpacing.spacingS),
                     _buildTextField(
                       controller: _netDaysController,
                       hint: '30',
@@ -450,7 +450,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.spacingM),
+            SizedBox(height: AppSpacing.spacingM),
 
             // ── Notes & Terms ─────────────────────────────────────────
             _SectionHeader(title: 'Notes & Terms'),
@@ -466,9 +466,9 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                   ),
                   if (_config.showNotesField) ...[
                     _buildDividerLine(),
-                    const SizedBox(height: AppSpacing.spacingM),
+                    SizedBox(height: AppSpacing.spacingM),
                     _buildLabel('Default Notes'),
-                    const SizedBox(height: AppSpacing.spacingS),
+                    SizedBox(height: AppSpacing.spacingS),
                     _buildTextField(
                       controller: _defaultNotesController,
                       hint: 'Thank you for your business!',
@@ -484,9 +484,9 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                   ),
                   if (_config.showTermsField) ...[
                     _buildDividerLine(),
-                    const SizedBox(height: AppSpacing.spacingM),
+                    SizedBox(height: AppSpacing.spacingM),
                     _buildLabel('Default Terms'),
-                    const SizedBox(height: AppSpacing.spacingS),
+                    SizedBox(height: AppSpacing.spacingS),
                     _buildTextField(
                       controller: _defaultTermsController,
                       hint: 'Payment is due within 30 days...',
@@ -496,18 +496,18 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.spacingXL),
+            SizedBox(height: AppSpacing.spacingXL),
 
             // ── Save Button ───────────────────────────────────────────
             SizedBox(
               width: double.infinity,
-              height: AppSpacing.buttonHeight,
+              // height: AppSpacing.buttonHeight,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: appColors.primaryColor,
                   foregroundColor: Colors.white,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: AppRadius.medium),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppRadius.medium)),
                   elevation: 0,
                 ),
                 onPressed: _saving ? null : _save,
@@ -525,7 +525,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                       ),
               ),
             ),
-            const SizedBox(height: AppSpacing.spacingXL),
+            SizedBox(height: AppSpacing.spacingXL),
           ],
         ),
       ),
@@ -570,15 +570,15 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         border: OutlineInputBorder(
-          borderRadius: AppRadius.medium,
+          borderRadius: BorderRadius.circular(AppRadius.medium),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: AppRadius.medium,
+          borderRadius: BorderRadius.circular(AppRadius.medium),
           borderSide: BorderSide(color: appColors.borderColor),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: AppRadius.medium,
+          borderRadius: BorderRadius.circular(AppRadius.medium),
           borderSide:
               BorderSide(color: appColors.primaryColor, width: 1.5),
         ),
@@ -620,7 +620,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14),
       decoration: BoxDecoration(
-        borderRadius: AppRadius.medium,
+        borderRadius: BorderRadius.circular(AppRadius.medium),
         border: Border.all(color: appColors.borderColor),
         color: appColors.borderColor.withValues(alpha: 0.2),
       ),
@@ -658,7 +658,7 @@ class _InvoiceConfigScreenState extends State<InvoiceConfigScreen> {
                 color: isSelected
                     ? appColors.primaryColor
                     : appColors.borderColor.withValues(alpha: 0.25),
-                borderRadius: AppRadius.medium,
+                borderRadius: BorderRadius.circular(AppRadius.medium),
                 border: Border.all(
                   color: isSelected
                       ? appColors.primaryColor
@@ -719,10 +719,10 @@ class _Card extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+      padding: EdgeInsets.all(AppSpacing.paddingMedium),
       decoration: BoxDecoration(
         color: appColors.backgroundColor,
-        borderRadius: AppRadius.large,
+        borderRadius: BorderRadius.circular(AppRadius.large),
         border: Border.all(color: appColors.borderColor),
         boxShadow: [
           BoxShadow(

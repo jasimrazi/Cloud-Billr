@@ -27,7 +27,7 @@ class LogoPicker extends StatelessWidget {
             size: 32,
             color: appColors.textSecondaryColor.withValues(alpha: 0.6),
           ),
-          const SizedBox(height: AppSpacing.spacingS),
+          SizedBox(height: AppSpacing.spacingS),
           Text(
             'Add Logo',
             style: TextStyle(
@@ -105,7 +105,7 @@ class LogoPicker extends StatelessWidget {
     } else {
       // File image
       content = ClipRRect(
-        borderRadius: AppRadius.large,
+        borderRadius: BorderRadius.circular(AppRadius.large),
         child: Image.file(
           File(logoPath!),
           fit: BoxFit.cover,
@@ -126,7 +126,7 @@ class LogoPicker extends StatelessWidget {
           height: 120,
           decoration: BoxDecoration(
             color: appColors.surfaceColor,
-            borderRadius: AppRadius.large,
+            borderRadius: BorderRadius.circular(AppRadius.large),
             border: Border.all(color: appColors.borderColor),
           ),
           child: content,

@@ -58,7 +58,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: appColors.backgroundColor,
-        shape: RoundedRectangleBorder(borderRadius: AppRadius.large),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.large)),
         title: Text(
           'Change Status',
           style: TextStyle(
@@ -117,7 +117,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: appColors.backgroundColor,
-        shape: RoundedRectangleBorder(borderRadius: AppRadius.large),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.large)),
         title: Text(
           'Confirm Status Change',
           style: TextStyle(
@@ -140,7 +140,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: appColors.primaryColor,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: AppRadius.medium),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.medium)),
             ),
             onPressed: () => Navigator.of(ctx).pop(true),
             child: const Text('Confirm'),
@@ -162,7 +162,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
         content: Text('${_invoice.invoiceNumber} marked as $chosen'),
         backgroundColor: _statusFg(chosen),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: AppRadius.medium),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.medium)),
       ),
     );
   }
@@ -172,7 +172,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: appColors.backgroundColor,
-        shape: RoundedRectangleBorder(borderRadius: AppRadius.large),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.large)),
         title: Text(
           'Delete Invoice',
           style: TextStyle(
@@ -192,7 +192,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: appColors.redColor,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: AppRadius.medium),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.medium)),
             ),
             onPressed: () => Navigator.of(ctx).pop(true),
             child: const Text('Delete'),
@@ -242,7 +242,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.mainPadding),
+          padding: EdgeInsets.all(AppSpacing.mainPadding),
           physics: const BouncingScrollPhysics(),
           children: [
             // ── Invoice Header ──────────────────────────────────────
@@ -299,7 +299,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.spacingM),
+            SizedBox(height: AppSpacing.spacingM),
 
             // ── Bill To ─────────────────────────────────────────────
             _SectionLabel(label: 'Bill To'),
@@ -320,7 +320,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: AppSpacing.spacingM),
+                  SizedBox(width: AppSpacing.spacingM),
                   Text(
                     _invoice.clientName,
                     style: TextStyle(
@@ -332,7 +332,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.spacingM),
+            SizedBox(height: AppSpacing.spacingM),
 
             if (_invoice.items.isNotEmpty) ...[
               _SectionLabel(label: 'Items'),
@@ -382,7 +382,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                   }).toList(),
                 ),
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
             ],
 
             // ── Totals ───────────────────────────────────────────────
@@ -399,19 +399,19 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.spacingXL),
+            SizedBox(height: AppSpacing.spacingXL),
 
             // ── Actions ──────────────────────────────────────────────
             if (!widget.previewMode) ...[
               SizedBox(
                 width: double.infinity,
-                height: AppSpacing.buttonHeight,
+                // height: AppSpacing.buttonHeight,
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: appColors.primaryColor,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                        borderRadius: AppRadius.medium),
+                        borderRadius: BorderRadius.circular(AppRadius.medium)),
                     elevation: 0,
                   ),
                   icon: const Icon(Icons.edit_outlined, size: 18),
@@ -423,15 +423,15 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                   onPressed: _showMarkAsDialog,
                 ),
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
               SizedBox(
                 width: double.infinity,
-                height: AppSpacing.buttonHeight,
+                // height: AppSpacing.buttonHeight,
                 child: OutlinedButton.icon(
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: appColors.borderColor),
                     shape: RoundedRectangleBorder(
-                        borderRadius: AppRadius.medium),
+                        borderRadius: BorderRadius.circular(AppRadius.medium)),
                   ),
                   icon: Icon(Icons.picture_as_pdf_outlined,
                       size: 18, color: appColors.textSecondaryColor),
@@ -468,7 +468,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                 ),
               ),
             ],
-            const SizedBox(height: AppSpacing.spacingXL),
+            SizedBox(height: AppSpacing.spacingXL),
           ],
         ),
       ),
@@ -486,10 +486,10 @@ class _Card extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.paddingMedium),
+      padding: EdgeInsets.all(AppSpacing.paddingMedium),
       decoration: BoxDecoration(
         color: appColors.backgroundColor,
-        borderRadius: AppRadius.large,
+        borderRadius: BorderRadius.circular(AppRadius.large),
         border: Border.all(color: appColors.borderColor),
         boxShadow: [
           BoxShadow(
