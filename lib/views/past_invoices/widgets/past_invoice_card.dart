@@ -19,11 +19,11 @@ class PastInvoiceCard extends StatelessWidget {
         ),
       ),
       child: Container(
-        padding: const EdgeInsets.all(AppSpacing.paddingMedium),
-        margin: const EdgeInsets.only(bottom: AppSpacing.marginMedium),
+        padding: EdgeInsets.all(AppSpacing.paddingMedium),
+        margin: EdgeInsets.only(bottom: AppSpacing.marginMedium),
         decoration: BoxDecoration(
           color: appColors.backgroundColor,
-          borderRadius: AppRadius.medium,
+          borderRadius: BorderRadius.circular(AppRadius.medium),
           border: Border.all(color: appColors.borderColor),
         ),
         child: Row(

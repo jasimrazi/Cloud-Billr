@@ -56,7 +56,7 @@ class _PastInvoicesScreenState extends State<PastInvoicesScreen> {
                 top: Radius.circular(24),
               ),
             ),
-            padding: const EdgeInsets.fromLTRB(
+            padding: EdgeInsets.fromLTRB(
                 AppSpacing.mainPadding,
                 AppSpacing.paddingLarge,
                 AppSpacing.mainPadding,
@@ -75,7 +75,7 @@ class _PastInvoicesScreenState extends State<PastInvoicesScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.spacingL),
+                SizedBox(height: AppSpacing.spacingL),
                 Text(
                   'Filter by Status',
                   style: TextStyle(
@@ -84,7 +84,7 @@ class _PastInvoicesScreenState extends State<PastInvoicesScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.spacingM),
+                SizedBox(height: AppSpacing.spacingM),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -127,7 +127,7 @@ class _PastInvoicesScreenState extends State<PastInvoicesScreen> {
                     );
                   }).toList(),
                 ),
-                const SizedBox(height: AppSpacing.spacingL),
+                SizedBox(height: AppSpacing.spacingL),
               ],
             ),
           );
@@ -193,16 +193,16 @@ class _PastInvoicesScreenState extends State<PastInvoicesScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
+          padding: EdgeInsets.symmetric(
               horizontal: AppSpacing.mainPadding),
           child: Column(
             children: [
-              const SizedBox(height: AppSpacing.spacingS),
+              SizedBox(height: AppSpacing.spacingS),
               // Active filter chip
               if (_statusFilter != 'All')
                 Padding(
                   padding:
-                      const EdgeInsets.only(bottom: AppSpacing.spacingS),
+                      EdgeInsets.only(bottom: AppSpacing.spacingS),
                   child: Row(
                     children: [
                       Container(
@@ -250,7 +250,7 @@ class _PastInvoicesScreenState extends State<PastInvoicesScreen> {
               Container(
                 decoration: BoxDecoration(
                   color: appColors.surfaceColor,
-                  borderRadius: AppRadius.medium,
+                  borderRadius: BorderRadius.circular(AppRadius.medium),
                   border: Border.all(color: appColors.borderColor),
                 ),
                 child: TextField(
@@ -286,7 +286,7 @@ class _PastInvoicesScreenState extends State<PastInvoicesScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.spacingL),
+              SizedBox(height: AppSpacing.spacingL),
               // List
               Expanded(
                 child: filtered.isEmpty
@@ -298,7 +298,7 @@ class _PastInvoicesScreenState extends State<PastInvoicesScreen> {
                                 size: 48,
                                 color: appColors.textSecondaryColor
                                     .withValues(alpha: 0.4)),
-                            const SizedBox(height: AppSpacing.spacingM),
+                            SizedBox(height: AppSpacing.spacingM),
                             Text(
                               'No invoices found',
                               style: TextStyle(

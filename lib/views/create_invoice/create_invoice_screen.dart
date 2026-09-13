@@ -218,7 +218,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
           content: Text('Invoice $invoiceNumber created successfully!'),
           backgroundColor: appColors.primaryColor,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: AppRadius.medium),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.medium)),
         ),
       );
       Navigator.of(context).pop();
@@ -321,7 +321,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.mainPadding),
+          padding: EdgeInsets.all(AppSpacing.mainPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -330,13 +330,13 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                 builder: (_, draft, __) => draft.invoiceNumber.isNotEmpty
                     ? Padding(
                         padding:
-                            const EdgeInsets.only(bottom: AppSpacing.spacingM),
+                            EdgeInsets.only(bottom: AppSpacing.spacingM),
                         child: Row(
                           children: [
                             Icon(Icons.tag,
                                 size: 14,
                                 color: appColors.textSecondaryColor),
-                            const SizedBox(width: 6),
+                            SizedBox(width: 6),
                             Text(
                               draft.invoiceNumber,
                               style: TextStyle(
@@ -358,10 +358,10 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                   if (companies.isEmpty) {
                     return Container(
                       padding:
-                          const EdgeInsets.all(AppSpacing.paddingMedium),
+                          EdgeInsets.all(AppSpacing.paddingMedium),
                       decoration: BoxDecoration(
                         color: appColors.surfaceColor,
-                        borderRadius: AppRadius.medium,
+                        borderRadius: BorderRadius.circular(AppRadius.medium),
                         border: Border.all(
                             color:
                                 appColors.redColor.withValues(alpha: 0.5)),
@@ -370,7 +370,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                         children: [
                           Icon(Icons.warning_amber_rounded,
                               color: appColors.redColor, size: 36),
-                          const SizedBox(height: AppSpacing.spacingS),
+                          SizedBox(height: AppSpacing.spacingS),
                           Text(
                             'No Company Profile Found',
                             style: TextStyle(
@@ -379,7 +379,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: AppSpacing.spacingXS),
+                          SizedBox(height: AppSpacing.spacingXS),
                           Text(
                             'You must create your company profile in settings before creating an invoice.',
                             textAlign: TextAlign.center,
@@ -388,14 +388,14 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                               fontSize: 13,
                             ),
                           ),
-                          const SizedBox(height: AppSpacing.spacingM),
+                          SizedBox(height: AppSpacing.spacingM),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: appColors.primaryColor,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: AppRadius.medium,
+                                  borderRadius: BorderRadius.circular(AppRadius.medium),
                                 ),
                               ),
                               onPressed: () async {
@@ -435,14 +435,14 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.spacingS),
+                      SizedBox(height: AppSpacing.spacingS),
                       Container(
                         width: double.infinity,
                         padding:
-                            const EdgeInsets.all(AppSpacing.paddingMedium),
+                            EdgeInsets.all(AppSpacing.paddingMedium),
                         decoration: BoxDecoration(
                           color: appColors.surfaceColor.withValues(alpha: 0.5),
-                          borderRadius: AppRadius.medium,
+                          borderRadius: BorderRadius.circular(AppRadius.medium),
                           border:
                               Border.all(color: appColors.borderColor),
                         ),
@@ -450,7 +450,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildCompanyLogoWidget(myCompany.logoPath),
-                            const SizedBox(width: AppSpacing.spacingM),
+                            SizedBox(width: AppSpacing.spacingM),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -491,24 +491,24 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.spacingM),
+                      SizedBox(height: AppSpacing.spacingM),
                     ],
                   );
                 },
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
 
               // Customer Selector
               Consumer2<CustomerProvider, CreateInvoiceProvider>(
                 builder: (context, customerProvider, draft, _) {
-                  final customers = customerProvider.customers;
+                  var customers = customerProvider.customers;
                   if (customers.isEmpty) {
                     return Container(
                       padding:
-                          const EdgeInsets.all(AppSpacing.paddingMedium),
+                          EdgeInsets.all(AppSpacing.paddingMedium),
                       decoration: BoxDecoration(
                         color: appColors.surfaceColor,
-                        borderRadius: AppRadius.medium,
+                        borderRadius: BorderRadius.circular(AppRadius.medium),
                         border: Border.all(
                             color:
                                 appColors.redColor.withValues(alpha: 0.5)),
@@ -517,7 +517,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                         children: [
                           Icon(Icons.warning_amber_rounded,
                               color: appColors.redColor, size: 36),
-                          const SizedBox(height: AppSpacing.spacingS),
+                          SizedBox(height: AppSpacing.spacingS),
                           Text(
                             'No Customer Profile Found',
                             style: TextStyle(
@@ -526,7 +526,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: AppSpacing.spacingXS),
+                          SizedBox(height: AppSpacing.spacingXS),
                           Text(
                             'You must create a customer profile before creating an invoice.',
                             textAlign: TextAlign.center,
@@ -535,14 +535,14 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                               fontSize: 13,
                             ),
                           ),
-                          const SizedBox(height: AppSpacing.spacingM),
+                          SizedBox(height: AppSpacing.spacingM),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: appColors.primaryColor,
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: AppRadius.medium),
+                                    borderRadius: BorderRadius.circular(AppRadius.medium)),
                               ),
                               onPressed: () => Navigator.push(
                                 context,
@@ -581,13 +581,13 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.spacingS),
+                      SizedBox(height: AppSpacing.spacingS),
                       Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                             horizontal: AppSpacing.paddingMedium),
                         decoration: BoxDecoration(
                           color: appColors.surfaceColor,
-                          borderRadius: AppRadius.medium,
+                          borderRadius: BorderRadius.circular(AppRadius.medium),
                           border: Border.all(
                             color: draft.selectedCustomer == null
                                 ? appColors.redColor.withValues(alpha: 0.5)
@@ -637,7 +637,14 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                               );
                               if (result != null && context.mounted) {
                                 await customerProvider.addCustomer(result);
-                                draft.setCustomer(result);
+
+                                customers = customerProvider.customers;
+
+                                final addedCustomer = customers.firstWhere(
+                                  (customer) => customer.id == result.id,
+                                );
+
+                                draft.setCustomer(addedCustomer);
                               }
                             },
                             icon: Icon(Icons.add,
@@ -654,14 +661,14 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                         ],
                       ),
                       if (draft.selectedCustomer != null) ...[
-                        const SizedBox(height: AppSpacing.spacingM),
+                        SizedBox(height: AppSpacing.spacingM),
                         Container(
                           width: double.infinity,
                           padding:
-                              const EdgeInsets.all(AppSpacing.paddingMedium),
+                              EdgeInsets.all(AppSpacing.paddingMedium),
                           decoration: BoxDecoration(
                             color: appColors.surfaceColor.withValues(alpha: 0.5),
-                            borderRadius: AppRadius.medium,
+                            borderRadius: BorderRadius.circular(AppRadius.medium),
                             border:
                                 Border.all(color: appColors.borderColor),
                           ),
@@ -686,7 +693,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: AppSpacing.spacingM),
+                              SizedBox(width: AppSpacing.spacingM),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment:
@@ -730,12 +737,12 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                           ),
                         ),
                       ],
-                      const SizedBox(height: AppSpacing.spacingM),
+                      SizedBox(height: AppSpacing.spacingM),
                     ],
                   );
                 },
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
 
               // Items Section
               Consumer<CreateInvoiceProvider>(
@@ -767,7 +774,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: AppSpacing.spacingS),
+                    SizedBox(height: AppSpacing.spacingS),
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -785,23 +792,23 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
 
               const TotalsSection(),
-              const SizedBox(height: AppSpacing.spacingXL),
+              SizedBox(height: AppSpacing.spacingXL),
 
               const TemplatePicker(),
-              const SizedBox(height: AppSpacing.spacingXL),
+              SizedBox(height: AppSpacing.spacingXL),
 
               // Save Button
               SizedBox(
                 width: double.infinity,
-                height: AppSpacing.buttonHeight,
+                // height: AppSpacing.buttonHeight,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: appColors.primaryColor,
                     shape: RoundedRectangleBorder(
-                      borderRadius: AppRadius.medium,
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
                     ),
                     elevation: 0,
                   ),
@@ -816,18 +823,18 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.spacingM),
+              SizedBox(height: AppSpacing.spacingM),
 
               // Export PDF stub
               SizedBox(
                 width: double.infinity,
-                height: AppSpacing.buttonHeight,
+                // height: AppSpacing.buttonHeight,
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     backgroundColor: appColors.surfaceColor,
                     side: BorderSide(color: appColors.borderColor),
                     shape: RoundedRectangleBorder(
-                      borderRadius: AppRadius.medium,
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
                     ),
                   ),
                   onPressed: () {
@@ -900,7 +907,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.spacingXL),
+              SizedBox(height: AppSpacing.spacingXL),
             ],
           ),
         ),
